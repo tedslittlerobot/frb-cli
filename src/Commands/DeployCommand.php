@@ -2,19 +2,21 @@
 
 namespace Tlr\Frb\Commands;
 
-use ZipArchive;
-use RuntimeException;
 use GuzzleHttp\Client;
-use Symfony\Component\Process\Process;
-use Symfony\Component\Filesystem\Filesystem;
+use RuntimeException;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Process\Process;
+use Tlr\Frb\Commands\AbstractEnvironmentCommand;
+use Tlr\Frb\Config;
+use ZipArchive;
 
-class DeployCommand extends Command
+class DeployCommand extends AbstractEnvironmentCommand
 {
     /**
      * Configure the command options.
@@ -26,7 +28,7 @@ class DeployCommand extends Command
         $this
             ->setName('deploy')
             ->setDescription('Deploy to the given environment')
-            ->addArgument('environment', InputArgument::REQUIRED)
+            ->addEnvironmentArgument()
         ;
     }
 
@@ -37,8 +39,10 @@ class DeployCommand extends Command
      * @param  \Symfony\Component\Console\Output\OutputInterface  $output
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function handle(Config $config, InputInterface $input, OutputInterface $output)
     {
+        dd('not finished.');
+
         $directory = ($input->getArgument('name')) ? getcwd().'/'.$input->getArgument('name') : getcwd();
 
         if (! $input->getOption('force')) {
