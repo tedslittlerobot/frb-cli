@@ -1,0 +1,11 @@
+name               : test-project-2
+frb_zone           : deploy.eu2.frbit.com
+deploy_from_branch : origin/master
+deploy_to_branch   : master
+
+build_command :
+  - make
+  - run
+
+build_directory :
+  - public/build

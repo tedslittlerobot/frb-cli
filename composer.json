@@ -1,0 +1,29 @@
+{
+    "name": "tlr/frb-cli",
+    "description": "Fortrabbit CLI Tool (Unofficial).",
+    "keywords": ["fortrabbit", "frb", "fort rabbit"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Stefan Horner",
+            "email": "stef@tedslittlerobot.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Tlr\\Frb\\": "src/"
+        }
+    },
+    "require": {
+        "guzzlehttp/guzzle": "~6.0",
+        "symfony/console": "~3.0|~4.0",
+        "symfony/filesystem": "~3.0|~4.0",
+        "symfony/process": "~3.0|~4.0",
+        "symfony/yaml": "^4.1",
+        "illuminate/support": "^5.6",
+        "symfony/finder": "^4.1"
+    },
+    "bin": [
+        "frb"
+    ]
+}
