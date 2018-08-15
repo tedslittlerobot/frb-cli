@@ -32,12 +32,9 @@ class Deploy extends AbstractTask
             ->ensureStageIsClean()
             ->fetch()
             ->onBranch($config->targetBranch(), function($git, $command, $input, $output) {
-                $git->fetch();
-                // @todo - do more stuff!
-                // - run deploy tasks
-                // - push to frb
-                // - upload???
-                // - run post scripts
+                $this->progress('@todo - Build Assets if there are any to build');
+                $this->progress('@todo - Push Assets if there are any to push');
+                $this->progress('@todo - Push to fortrabbit');
             })
         ;
     }
