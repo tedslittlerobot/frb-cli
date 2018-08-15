@@ -6,18 +6,15 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tlr\Frb\Commands\AbstractEnvironmentCommand;
 use Tlr\Frb\Config;
-use Tlr\Frb\Tasks\Batch\CheckGitSetup;
-use Tlr\Frb\Tasks\Batch\Deploy;
-use Tlr\Frb\Tasks\FridayJumper;
 
-class DeployCommand extends AbstractEnvironmentCommand
+class ResetRemoteCommand extends AbstractEnvironmentCommand
 {
     /**
      * Command Title
      *
      * @var string
      */
-    protected $title = 'Deploy';
+    protected $title = 'Reset Remote Application Server';
 
     /**
      * Configure the command options.
@@ -27,8 +24,8 @@ class DeployCommand extends AbstractEnvironmentCommand
     protected function configure()
     {
         $this
-            ->setName('deploy')
-            ->setDescription('Deploy to the given environment')
+            ->setName('remote:reset')
+            ->setDescription('Reset the fortrabbit server.')
             ->addEnvironmentArgument()
         ;
     }
@@ -42,7 +39,6 @@ class DeployCommand extends AbstractEnvironmentCommand
      */
     protected function handle(Config $config, InputInterface $input, OutputInterface $output)
     {
-        $this->task(CheckGitSetup::class)->run($config);
-        $this->task(Deploy::class)->deploy($config);
+        //
     }
 }

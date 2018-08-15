@@ -6,18 +6,15 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tlr\Frb\Commands\AbstractEnvironmentCommand;
 use Tlr\Frb\Config;
-use Tlr\Frb\Tasks\Batch\CheckGitSetup;
-use Tlr\Frb\Tasks\Batch\Deploy;
-use Tlr\Frb\Tasks\FridayJumper;
 
-class DeployCommand extends AbstractEnvironmentCommand
+class FirstDeployCommand extends AbstractEnvironmentCommand
 {
     /**
      * Command Title
      *
      * @var string
      */
-    protected $title = 'Deploy';
+    protected $title = 'First Deploy';
 
     /**
      * Configure the command options.
@@ -27,7 +24,7 @@ class DeployCommand extends AbstractEnvironmentCommand
     protected function configure()
     {
         $this
-            ->setName('deploy')
+            ->setName('deploy:first')
             ->setDescription('Deploy to the given environment')
             ->addEnvironmentArgument()
         ;
@@ -42,7 +39,6 @@ class DeployCommand extends AbstractEnvironmentCommand
      */
     protected function handle(Config $config, InputInterface $input, OutputInterface $output)
     {
-        $this->task(CheckGitSetup::class)->run($config);
-        $this->task(Deploy::class)->deploy($config);
+        //
     }
 }

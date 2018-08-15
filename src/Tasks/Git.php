@@ -259,4 +259,29 @@ class Git extends AbstractTask
 
         return $this;
     }
+
+    /**
+     * Deploy / Push to fortrabbit for the first time
+     *
+     * @param  Tlr\Frb\Config $config
+     * @return Tlr\Frb\Tasks\Git
+     */
+    public function firstPushToFortrabbit(Config $config) : Git
+    {
+        $this->progress('Pushing to Fortrabbit');
+
+        $process = new Process(sprintf(
+            'git push -u %s %s:refs/heads/%s',
+            $config->fortrabbitRemoteName(),
+            $config->targetBranch(),
+            $config->remoteBranch()
+        ));
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        return $this;
+    }
 }

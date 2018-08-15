@@ -9,12 +9,11 @@ Looks for a .deploy folder in your project, that should contain environment conf
 
 ## To Do
 
-- init         : Bootstrap a project's .deploy folder
-- ssh          : SSH into the server
-- deploy       : Deploys to environment
-- deploy:first       : Run the first deploy
-- deploy:touch : Deploys without uploading any assets
-- deploy:scp  : Push assets only
-- deploy:build-scp: Build and push assets only
-- remote:reset        : Reset the remote FRB instance
-- make:env  : Create an environment file
+- N init             : Bootstrap a project's .deploy folder
+- N make:env         : Create an environment file
+- E ssh              : SSH into the server
+- E deploy           : Deploys to environment
+- E deploy:first     : Run the first deploy
+- E deploy:touch     : Deploys without uploading any assets
+- E deploy:assets    : Push assets only (--scp-only --build-only)
+- E remote:reset     : Reset the remote FRB instance
