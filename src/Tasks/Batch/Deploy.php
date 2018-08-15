@@ -26,7 +26,10 @@ class Deploy extends AbstractTask
     {
         $this->task(FridayJumper::class)->run();
 
+        $this->task(Git::class)->stageIsDirty();
+
         $this->task(Git::class)
+            ->ensureStageIsClean()
             ->fetch()
             ->onBranch($config->targetBranch(), function($git, $command, $input, $output) {
                 $git->fetch();

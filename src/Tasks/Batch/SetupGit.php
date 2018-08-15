@@ -28,7 +28,7 @@ class SetupGit extends AbstractTask
         $this->progress('Adding remote');
 
         $git
-            // ->addEnvironmentRemote($config)
+            ->addEnvironmentRemote($config)
             ->fetch()
         ;
 

@@ -39,6 +39,20 @@ class Git extends AbstractTask
     }
 
     /**
+     * Ensure the staging area is clear!
+     *
+     * @return Git
+     */
+    public function ensureStageIsClean() : Git
+    {
+        if ($this->stageIsDirty()) {
+            throw new \Exception('The Git Staging area has uncommitted files. Clean up your current branch, then try again.');
+        }
+
+        return $this;
+    }
+
+    /**
      * Checkout the given branch
      *
      * @param  string $branch
@@ -173,5 +187,35 @@ class Git extends AbstractTask
         $this->checkout($initialHead);
 
         return $this;
+    }
+
+    /**
+     * Check if the current git stage is dirty
+     *
+     * @return bool
+     */
+    public function stageIsDirty() : bool
+    {
+        $process = new Process('git status --porcelain');
+
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        $stage = $process->getOutput();
+
+        return !!trim($stage);
+    }
+
+    /**
+     * Check if the current git stage is clean
+     *
+     * @return bool
+     */
+    public function stageIsClean() : bool
+    {
+        return !$this->stageIsDirty();
     }
 }

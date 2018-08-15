@@ -44,7 +44,7 @@ class DeployCommand extends AbstractEnvironmentCommand
      */
     protected function handle(Config $config, InputInterface $input, OutputInterface $output)
     {
-        $this->task(CheckGitSetup::class)->run($config);
+        // $this->task(CheckGitSetup::class)->run($config);
         $this->task(Deploy::class)->run($config);
     }
 }
