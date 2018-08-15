@@ -5,6 +5,7 @@ namespace Tlr\Frb\Tasks;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Tlr\Frb\Config;
+use Tlr\Frb\Tasks\AbstractTask;
 
 class Git extends AbstractTask
 {

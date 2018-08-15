@@ -9,9 +9,9 @@ if (file_exists(__DIR__.'/../../autoload.php')) {
 
 $app = new Symfony\Component\Console\Application('Fortrabbit CLI (Unofficial)', '0.0.1');
 
-$app->add(new Tlr\Frb\Commands\DeployAssetsCommand);    // needs assets tasks
-$app->add(new Tlr\Frb\Commands\DeployCommand);          // almost done - needs assets tasks
-$app->add(new Tlr\Frb\Commands\FirstDeployCommand);     // almost done - needs assets tasks
+$app->add(new Tlr\Frb\Commands\DeployAssetsCommand);    // needs assets push task
+$app->add(new Tlr\Frb\Commands\DeployCommand);          // almost done - needs assets push task
+$app->add(new Tlr\Frb\Commands\FirstDeployCommand);     // almost done - needs assets push task
 $app->add(new Tlr\Frb\Commands\ResetRemoteCommand);     // done
 $app->add(new Tlr\Frb\Commands\SshCommand);             // done
 $app->add(new Tlr\Frb\Commands\TouchDeployCommand);     // done

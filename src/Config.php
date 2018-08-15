@@ -2,6 +2,7 @@
 
 namespace Tlr\Frb;
 
+use Illuminate\Support\Collection;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Yaml\Yaml;
@@ -202,21 +203,21 @@ class Config
     /**
      * Get the build commands to run
      *
-     * @return array
+     * @return Illuminate\Support\Collection
      */
-    public function buildCommands() : array
+    public function buildCommands() : Collection
     {
-        return (array) $this->get('build_command', []);
+        return collect((array) $this->get('build_command', []));
     }
 
     /**
      * Get the build directories to deploy
      *
-     * @return array
+     * @return Illuminate\Support\Collection
      */
-    public function buildDirectories() : array
+    public function buildDirectories() : Collection
     {
-        return (array) $this->get('build_directory', []);
+        return collect((array) $this->get('build_directory', []));
     }
 
     /**

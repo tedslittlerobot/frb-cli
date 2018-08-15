@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tlr\Frb\Commands\AbstractEnvironmentCommand;
 use Tlr\Frb\Config;
+use Tlr\Frb\Tasks\Build;
 
 class DeployAssetsCommand extends AbstractEnvironmentCommand
 {
@@ -63,7 +64,7 @@ class DeployAssetsCommand extends AbstractEnvironmentCommand
         $shouldBuild = (!$scpOnly && !$buildOnly) || $buildOnly;
 
         if ($shouldBuild) {
-            $this->output->writeLn('BUILD');
+            $this->task(Build::class)->run($config);
         }
 
         if ($shouldScp) {

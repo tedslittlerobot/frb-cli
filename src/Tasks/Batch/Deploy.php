@@ -4,6 +4,7 @@ namespace Tlr\Frb\Tasks\Batch;
 
 use Tlr\Frb\Config;
 use Tlr\Frb\Tasks\AbstractTask;
+use Tlr\Frb\Tasks\Build;
 use Tlr\Frb\Tasks\FridayJumper;
 use Tlr\Frb\Tasks\Git;
 
@@ -31,7 +32,7 @@ class Deploy extends AbstractTask
             ->ensureStageIsClean()
             ->fetch()
             ->onBranch($config->targetBranch(), function($git, $command, $input, $output) use ($config, $firstTime) {
-                $this->progress('@todo - Build Assets if there are any to build');
+                $this->task(Build::class)->run($config);
 
                 $firstTime ?
                     $git->firstPushToFortrabbit($config) :
