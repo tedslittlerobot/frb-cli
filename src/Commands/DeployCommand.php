@@ -45,6 +45,13 @@ class DeployCommand extends AbstractEnvironmentCommand
     {
         (new FridayJumper($this, $input, $output))->run();
 
+        (new \Tlr\Frb\Tasks\Git($this, $input, $output))
+            ->fetch()
+            ->onBranch($config->targetBranch(), function($git, $command, $input, $output) {
+                $git->fetch();
+            })
+        ;
+
         dd('not finished.');
 
         $directory = ($input->getArgument('name')) ? getcwd().'/'.$input->getArgument('name') : getcwd();

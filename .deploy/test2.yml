@@ -1,7 +1,7 @@
 name               : test-project-2
 frb_zone           : deploy.eu2.frbit.com
-deploy_from_branch : origin/master
-deploy_to_branch   : master
+target_branch      : origin/master
+remote_branch      : master
 
 build_command :
   - make

@@ -184,9 +184,9 @@ class Config
      *
      * @return string
      */
-    public function deployFromBranch() : string
+    public function targetBranch() : string
     {
-        return (string) $this->getOrError('deploy_from_branch');
+        return (string) $this->getOrError('target_branch');
     }
 
     /**
@@ -194,9 +194,9 @@ class Config
      *
      * @return string
      */
-    public function deployToBranch() : string
+    public function remoteBranch() : string
     {
-        return (string) $this->getOrError('deploy_to_branch');
+        return (string) $this->getOrError('remote_branch');
     }
 
     /**
