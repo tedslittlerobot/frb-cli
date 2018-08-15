@@ -4,6 +4,7 @@ namespace Tlr\Frb\Tasks;
 
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
+use Tlr\Frb\Config;
 
 class Git extends AbstractTask
 {
@@ -40,6 +41,7 @@ class Git extends AbstractTask
     /**
      * Checkout the given branch
      *
+     * @param  string $branch
      * @return Tlr\Frb\Tasks\Git
      */
     public function checkout(string $branch) : Git
@@ -50,6 +52,55 @@ class Git extends AbstractTask
         $process->run();
 
         return $this;
+    }
+
+    /**
+     * Add the given remote repository
+     *
+     * @param  string $name
+     * @param  string $url
+     * @return Tlr\Frb\Tasks\Git
+     */
+    public function addRemote(string $name, string $url) : Git
+    {
+        $this->formatProgress('Adding Remote: [%s : %s]', $name, $url);
+
+        $process = new Process(sprintf(
+            'git remote add %s %s',
+            $name,
+            $url
+        ));
+
+        $process->run();
+
+        return $this;
+    }
+
+    /**
+     * Add the environment's fortrabbit remote
+     *
+     * @param  Tlr\Frb\Config $config
+     * @return Tlr\Frb\Tasks\Git
+     */
+    public function addEnvironmentRemote(Config $config) : Git
+    {
+        return $this->addRemote(
+            'fortrabbit-' . $config->environment(),
+            $config->gitUrl()
+        );
+    }
+
+    /**
+     * Determine if the remote exists
+     *
+     * @return boolean
+     */
+    public function hasRemote(string $remote) : bool
+    {
+        $process = new Process('git remote');
+        $process->run();
+
+        return str_contains($process->getOutput(), $remote);
     }
 
     /**
