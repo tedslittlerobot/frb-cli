@@ -31,10 +31,10 @@ class Deploy extends AbstractTask
         $this->task(Git::class)
             ->ensureStageIsClean()
             ->fetch()
-            ->onBranch($config->targetBranch(), function($git, $command, $input, $output) {
+            ->onBranch($config->targetBranch(), function($git, $command, $input, $output) use ($config) {
                 $this->progress('@todo - Build Assets if there are any to build');
-                $this->progress('@todo - Push Assets if there are any to push');
-                $this->progress('@todo - Push to fortrabbit');
+                $this->progress('@todo - SCP Assets if there are any paths to push');
+                $git->pushToFortrabbit($config);
             })
         ;
     }

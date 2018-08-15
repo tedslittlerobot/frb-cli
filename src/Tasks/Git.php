@@ -16,6 +16,58 @@ class Git extends AbstractTask
     protected $section = 'Git';
 
     /**
+     *   STAGE HELPERS
+     */
+
+    /**
+     * Check if the current git stage is dirty
+     *
+     * @return bool
+     */
+    public function stageIsDirty() : bool
+    {
+        $process = new Process('git status --porcelain');
+
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        $stage = $process->getOutput();
+
+        return !!trim($stage);
+    }
+
+    /**
+     * Check if the current git stage is clean
+     *
+     * @return bool
+     */
+    public function stageIsClean() : bool
+    {
+        return !$this->stageIsDirty();
+    }
+
+    /**
+     * Ensure the staging area is clear!
+     *
+     * @return Git
+     */
+    public function ensureStageIsClean() : Git
+    {
+        if ($this->stageIsDirty()) {
+            throw new \Exception('The Git Staging area has uncommitted files. Clean up your current branch, then try again.');
+        }
+
+        return $this;
+    }
+
+    /**
+     *   REMOTE HELPERS
+     */
+
+    /**
      * Run a git fetch command
      *
      * @return Tlr\Frb\Tasks\Git
@@ -34,40 +86,6 @@ class Git extends AbstractTask
         }
 
         $this->progress('Fetched.');
-
-        return $this;
-    }
-
-    /**
-     * Ensure the staging area is clear!
-     *
-     * @return Git
-     */
-    public function ensureStageIsClean() : Git
-    {
-        if ($this->stageIsDirty()) {
-            throw new \Exception('The Git Staging area has uncommitted files. Clean up your current branch, then try again.');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Checkout the given branch
-     *
-     * @param  string $branch
-     * @return Tlr\Frb\Tasks\Git
-     */
-    public function checkout(string $branch) : Git
-    {
-        $this->progress('Checking out ' . $branch);
-
-        $process = new Process('git checkout ' . $branch);
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
 
         return $this;
     }
@@ -137,6 +155,30 @@ class Git extends AbstractTask
     }
 
     /**
+     *   BRANCH HELPERS
+     */
+
+    /**
+     * Checkout the given branch
+     *
+     * @param  string $branch
+     * @return Tlr\Frb\Tasks\Git
+     */
+    public function checkout(string $branch) : Git
+    {
+        $this->progress('Checking out ' . $branch);
+
+        $process = new Process('git checkout ' . $branch);
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        return $this;
+    }
+
+    /**
      * Get the current branch
      *
      * @return string
@@ -190,32 +232,31 @@ class Git extends AbstractTask
     }
 
     /**
-     * Check if the current git stage is dirty
-     *
-     * @return bool
+     *   DEPLOY HELPERS
      */
-    public function stageIsDirty() : bool
-    {
-        $process = new Process('git status --porcelain');
 
+    /**
+     * Deploy / Push to fortrabbit
+     *
+     * @param  Tlr\Frb\Config $config
+     * @return Tlr\Frb\Tasks\Git
+     */
+    public function pushToFortrabbit(Config $config) : Git
+    {
+        $this->progress('Pushing to Fortrabbit');
+
+        $process = new Process(sprintf(
+            'git push %s %s:%s',
+            $config->fortrabbitRemoteName(),
+            $config->targetBranch(),
+            $config->remoteBranch()
+        ));
         $process->run();
 
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
 
-        $stage = $process->getOutput();
-
-        return !!trim($stage);
-    }
-
-    /**
-     * Check if the current git stage is clean
-     *
-     * @return bool
-     */
-    public function stageIsClean() : bool
-    {
-        return !$this->stageIsDirty();
+        return $this;
     }
 }
