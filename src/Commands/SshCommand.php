@@ -10,6 +10,8 @@ use Tlr\Frb\Config;
 
 class SshCommand extends AbstractEnvironmentCommand
 {
+    protected $title = 'SSH';
+
     /**
      * Configure the command options.
      *

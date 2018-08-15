@@ -7,9 +7,17 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tlr\Frb\Config;
+use Tlr\Frb\HeaderWriter;
 
 abstract class AbstractEnvironmentCommand extends Command
 {
+    /**
+     * The command title
+     *
+     * @var string
+     */
+    protected $title = '';
+
     public function addEnvironmentArgument() : AbstractEnvironmentCommand
     {
         return $this->addArgument('environment', InputArgument::REQUIRED);
@@ -24,7 +32,13 @@ abstract class AbstractEnvironmentCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $headers = new HeaderWriter($this, $output);
+
+        $headers->mainTitle($this->title);
+
         $config = new Config($input->getArgument('environment'));
+
+        $headers->envTitle($config);
 
         $this->handle($config, $input, $output);
     }

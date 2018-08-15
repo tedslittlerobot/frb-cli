@@ -156,6 +156,16 @@ class Config
     }
 
     /**
+     * Get the project environment
+     *
+     * @return string
+     */
+    public function environment() : string
+    {
+        return $this->environment;
+    }
+
+    /**
      * ================================ OUTPUT ================================
      */
 

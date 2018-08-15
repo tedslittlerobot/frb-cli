@@ -14,10 +14,12 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Tlr\Frb\Commands\AbstractEnvironmentCommand;
 use Tlr\Frb\Config;
+use Tlr\Frb\FridayJumper;
 use ZipArchive;
 
 class DeployCommand extends AbstractEnvironmentCommand
 {
+    protected $title = 'Deploy';
     /**
      * Configure the command options.
      *
@@ -41,6 +43,8 @@ class DeployCommand extends AbstractEnvironmentCommand
      */
     protected function handle(Config $config, InputInterface $input, OutputInterface $output)
     {
+        (new FridayJumper($this, $input, $output))->run();
+
         dd('not finished.');
 
         $directory = ($input->getArgument('name')) ? getcwd().'/'.$input->getArgument('name') : getcwd();
