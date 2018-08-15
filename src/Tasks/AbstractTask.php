@@ -48,6 +48,29 @@ class AbstractTask
     }
 
     /**
+     * Build a new task
+     *
+     * @param  string $class
+     * @return Tlr\Frb\Tasks\AbstractTask
+     */
+    public function task(string $class) : AbstractTask
+    {
+        return new $class($this->command, $this->input, $this->output);
+    }
+
+    /**
+     * Write some progress to stdout
+     *
+     * @param  string $message
+     * @param  array $values
+     * @return Tlr\Frb\Tasks\AbstractTask
+     */
+    public function formatProgress(string $message, ...$values) : AbstractTask
+    {
+        return $this->progress(sprintf($message, ...$values));
+    }
+
+    /**
      * Write some progress to stdout
      *
      * @param  string $message
@@ -62,7 +85,6 @@ class AbstractTask
 
         return $this;
     }
-
 
     /**
      * Log the full process output

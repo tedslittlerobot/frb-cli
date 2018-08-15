@@ -1,6 +1,6 @@
 <?php
 
-namespace Tlr\Frb;
+namespace Tlr\Frb\Tasks;
 
 use Carbon\Carbon;
 use Symfony\Component\Console\Command\Command;
@@ -8,8 +8,9 @@ use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Tlr\Frb\Tasks\AbstractTask;
 
-class FridayJumper
+class FridayJumper extends AbstractTask
 {
     /**
      * Friday Jump ASCII Graphic - taken from
@@ -30,34 +31,6 @@ class FridayJumper
 ┃┃┃┃┃┃
 ┻┻┻┻┻┻
     ';
-
-    /**
-     * The command instance
-     *
-     * @var Symfony\Component\Console\Command\Command
-     */
-    protected $command;
-
-    /**
-     * The input interface
-     *
-     * @var InputInterface
-     */
-    protected $input;
-
-    /**
-     * The output interface
-     *
-     * @var Symfony\Component\Console\Output\OutputInterface
-     */
-    protected $output;
-
-    public function __construct(Command $command, InputInterface $input, OutputInterface $output)
-    {
-        $this->command = $command;
-        $this->input  = $input;
-        $this->output  = $output;
-    }
 
     /**
      * Determine if it is Friday

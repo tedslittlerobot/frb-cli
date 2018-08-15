@@ -14,7 +14,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Tlr\Frb\Commands\AbstractEnvironmentCommand;
 use Tlr\Frb\Config;
-use Tlr\Frb\FridayJumper;
+use Tlr\Frb\Tasks\Batch\Deploy;
 use ZipArchive;
 
 class DeployCommand extends AbstractEnvironmentCommand
@@ -43,63 +43,6 @@ class DeployCommand extends AbstractEnvironmentCommand
      */
     protected function handle(Config $config, InputInterface $input, OutputInterface $output)
     {
-        (new FridayJumper($this, $input, $output))->run();
-
-        (new \Tlr\Frb\Tasks\Git($this, $input, $output))
-            ->fetch()
-            ->onBranch($config->targetBranch(), function($git, $command, $input, $output) {
-                $git->fetch();
-            })
-        ;
-
-        dd('not finished.');
-
-        $directory = ($input->getArgument('name')) ? getcwd().'/'.$input->getArgument('name') : getcwd();
-
-        if (! $input->getOption('force')) {
-            $this->verifyApplicationDoesntExist($directory);
-        }
-
-        $output->writeln('<info>Crafting application...</info>');
-
-        $version = $this->getVersion($input);
-
-        $this->download($zipFile = $this->makeFilename(), $version)
-             ->extract($zipFile, $directory)
-             ->prepareWritableDirectories($directory, $output)
-             ->cleanUp($zipFile);
-
-        $composer = $this->findComposer();
-
-        $commands = [
-            $composer.' install --no-scripts',
-            $composer.' run-script post-root-package-install',
-            $composer.' run-script post-create-project-cmd',
-            $composer.' run-script post-autoload-dump',
-        ];
-
-        if ($input->getOption('no-ansi')) {
-            $commands = array_map(function ($value) {
-                return $value.' --no-ansi';
-            }, $commands);
-        }
-
-        if ($input->getOption('quiet')) {
-            $commands = array_map(function ($value) {
-                return $value.' --quiet';
-            }, $commands);
-        }
-
-        $process = new Process(implode(' && ', $commands), $directory, null, null, null);
-
-        if ('\\' !== DIRECTORY_SEPARATOR && file_exists('/dev/tty') && is_readable('/dev/tty')) {
-            $process->setTty(true);
-        }
-
-        $process->run(function ($type, $line) use ($output) {
-            $output->write($line);
-        });
-
-        $output->writeln('<comment>Application ready! Build something amazing.</comment>');
+        $this->task(Deploy::class)->run($config);
     }
 }
