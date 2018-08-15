@@ -247,4 +247,14 @@ class Config
             $this->getOrError('frb_zone')
         );
     }
+
+    /**
+     * Get the fortrabbit remote name
+     *
+     * @return string
+     */
+    public function fortrabbitRemoteName() : string
+    {
+        return 'frb-' . $this->environment();
+    }
 }

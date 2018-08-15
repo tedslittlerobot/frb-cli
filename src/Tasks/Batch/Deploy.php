@@ -16,6 +16,12 @@ class Deploy extends AbstractTask
      */
     protected $section = 'Deploy';
 
+    /**
+     * Run the task!
+     *
+     * @param  Config $config
+     * @return void
+     */
     public function run(Config $config)
     {
         $this->task(FridayJumper::class)->run();

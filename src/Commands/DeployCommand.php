@@ -14,6 +14,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Tlr\Frb\Commands\AbstractEnvironmentCommand;
 use Tlr\Frb\Config;
+use Tlr\Frb\Tasks\Batch\CheckGitSetup;
 use Tlr\Frb\Tasks\Batch\Deploy;
 use ZipArchive;
 
@@ -43,6 +44,7 @@ class DeployCommand extends AbstractEnvironmentCommand
      */
     protected function handle(Config $config, InputInterface $input, OutputInterface $output)
     {
+        $this->task(CheckGitSetup::class)->run($config);
         $this->task(Deploy::class)->run($config);
     }
 }

@@ -51,6 +51,10 @@ class Git extends AbstractTask
         $process = new Process('git checkout ' . $branch);
         $process->run();
 
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
         return $this;
     }
 
@@ -73,6 +77,10 @@ class Git extends AbstractTask
 
         $process->run();
 
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
         return $this;
     }
 
@@ -85,7 +93,7 @@ class Git extends AbstractTask
     public function addEnvironmentRemote(Config $config) : Git
     {
         return $this->addRemote(
-            'fortrabbit-' . $config->environment(),
+            $config->fortrabbitRemoteName(),
             $config->gitUrl()
         );
     }
@@ -101,6 +109,17 @@ class Git extends AbstractTask
         $process->run();
 
         return str_contains($process->getOutput(), $remote);
+    }
+
+    /**
+     * Determine if the fortrabbit remote exists
+     *
+     * @param  Tlr\Frb\Config $config
+     * @return boolean
+     */
+    public function hasFortrabbitRemote(Config $config) : bool
+    {
+        return $this->hasRemote($config->fortrabbitRemoteName());
     }
 
     /**
