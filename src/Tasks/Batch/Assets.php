@@ -63,4 +63,28 @@ class Assets extends AbstractTask
 
         return $this;
     }
+
+    /**
+     * Pull down all assets!
+     *
+     * @param  Config $config
+     * @return void
+     */
+    public function download(Config $config)
+    {
+        $scp = $this->task(Scp::class);
+        $directories = $config->buildDirectories();
+
+        if ($directories->isEmpty()) {
+            return;
+        }
+
+        $this->formatProgress('Downloading Directories [%s]', $directories->count());
+
+        $directories->each(function($directory) use ($scp, $config) {
+            $scp->pullDirectory($config, $directory);
+        });
+
+        return $this;
+    }
 }
