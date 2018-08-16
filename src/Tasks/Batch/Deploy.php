@@ -34,12 +34,16 @@ class Deploy extends AbstractTask
             ->onBranch($config->targetBranch(), function($git, $command, $input, $output) use ($config, $firstTime) {
                 $this->task(Assets::class)->build($config);
 
+                // @todo - pre deploy hooks (remote) - maintanence mode
+
                 $firstTime ?
                     $git->firstPushToFortrabbit($config) :
                     $git->pushToFortrabbit($config)
                 ;
 
                 $this->task(Assets::class)->push($config);
+
+                // @todo - pre deploy hooks (remote) - maintanence mode
             })
         ;
     }

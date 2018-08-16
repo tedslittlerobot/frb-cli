@@ -31,8 +31,13 @@ build_directory :
 
 ## To Do
 
-- [ ] N init             : Bootstrap a project's .deploy folder
-- [ ] N make:env         : Create an environment file
+- [ ] Add remote command hooks (maintanence mode during deploy?)
+- [ ] Add database details (backup command?)
+- [ ] Add proper output logging
+- [ ] Nicer error handling
+- [ ] Git check on valid branch at start as well as clear stage
+- [x] N init             : Bootstrap a project's .deploy folder
+- [x] N make:env         : Create an environment file
 - [x] E ssh              : SSH into the server
 - [x] E deploy           : Deploys to environment
 - [x] E deploy:first     : Run the first deploy
