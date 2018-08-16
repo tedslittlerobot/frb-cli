@@ -149,11 +149,24 @@ class Config
     /**
      * Get the project root
      *
+     * @param string $path
      * @return string
      */
-    public function root() : string
+    public function root(string $path = null) : string
     {
-        return $this->root;
+        return $path ? "{$this->root}/$path" : $this->root;
+    }
+
+    /**
+     * Get the config root
+     * @param string $path
+     * @return string
+     */
+    public function configRootPath(string $path = null) : string
+    {
+        $root = "{$this->root}/.deploy";
+
+        return $path ? "{$root}/$path" : $root;
     }
 
     /**
@@ -257,5 +270,17 @@ class Config
     public function fortrabbitRemoteName() : string
     {
         return 'frb-' . $this->environment();
+    }
+
+    /**
+     * Get the remote web root path
+     *
+     * @return string
+     */
+    public function remoteWebRootPath(string $path = null) : string
+    {
+        $root = sprintf('/srv/app/%s/htdocs', $this->projectName());
+
+        return $path ? "$root/$path" : $root;
     }
 }

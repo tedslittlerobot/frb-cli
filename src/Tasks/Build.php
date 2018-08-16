@@ -22,39 +22,17 @@ class Build extends AbstractTask
      * @param  Config $config
      * @return Tlr\Frb\Tasks\Build
      */
-    public function run(Config $config) : Build
+    public function build(Config $config, string $command) : Build
     {
-        $commands = $config->buildCommands();
+        $this->formatProgress('Running Build Command [%s]', $command);
 
-        if ($commands->isEmpty()) {
-            return;
+        $process = new Process($command);
+
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
         }
-
-        $this->formatProgress('Running Build Commands (%s)', $commands->count());
-
-        $commands->each(function($command, $index) use ($commands) {
-            if (is_numeric($index)) {
-                $this->formatProgress(
-                    'Running Build Command [%s/%s]',
-                    ($index + 1),
-                    $commands->count()
-                );
-            } else {
-                $this->formatProgress(
-                    'Running Build Command [%s of %s]',
-                    $index,
-                    $commands->count()
-                );
-            }
-
-            $process = new Process($command);
-
-            $process->run();
-
-            if (!$process->isSuccessful()) {
-                throw new ProcessFailedException($process);
-            }
-        });
 
         return $this;
     }

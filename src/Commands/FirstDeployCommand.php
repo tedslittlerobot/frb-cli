@@ -6,6 +6,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tlr\Frb\Commands\AbstractEnvironmentCommand;
 use Tlr\Frb\Config;
+use Tlr\Frb\Tasks\Batch\CheckGitSetup;
+use Tlr\Frb\Tasks\Batch\Deploy;
 
 class FirstDeployCommand extends AbstractEnvironmentCommand
 {
@@ -39,6 +41,7 @@ class FirstDeployCommand extends AbstractEnvironmentCommand
      */
     protected function handle(Config $config, InputInterface $input, OutputInterface $output)
     {
-        //
+        $this->task(CheckGitSetup::class)->run($config);
+        $this->task(Deploy::class)->firstDeploy($config);
     }
 }

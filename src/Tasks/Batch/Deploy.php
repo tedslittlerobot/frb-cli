@@ -4,7 +4,7 @@ namespace Tlr\Frb\Tasks\Batch;
 
 use Tlr\Frb\Config;
 use Tlr\Frb\Tasks\AbstractTask;
-use Tlr\Frb\Tasks\Build;
+use Tlr\Frb\Tasks\Batch\Assets;
 use Tlr\Frb\Tasks\FridayJumper;
 use Tlr\Frb\Tasks\Git;
 
@@ -32,14 +32,14 @@ class Deploy extends AbstractTask
             ->ensureStageIsClean()
             ->fetch()
             ->onBranch($config->targetBranch(), function($git, $command, $input, $output) use ($config, $firstTime) {
-                $this->task(Build::class)->run($config);
+                $this->task(Assets::class)->build($config);
 
                 $firstTime ?
                     $git->firstPushToFortrabbit($config) :
                     $git->pushToFortrabbit($config)
                 ;
 
-                $this->progress('@todo - SCP Assets if there are any paths to push');
+                $this->task(Assets::class)->build($config);
             })
         ;
     }

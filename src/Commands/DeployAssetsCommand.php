@@ -7,7 +7,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tlr\Frb\Commands\AbstractEnvironmentCommand;
 use Tlr\Frb\Config;
-use Tlr\Frb\Tasks\Build;
+use Tlr\Frb\Tasks\Batch\Assets;
 
 class DeployAssetsCommand extends AbstractEnvironmentCommand
 {
@@ -63,12 +63,14 @@ class DeployAssetsCommand extends AbstractEnvironmentCommand
         $shouldScp   = (!$scpOnly && !$buildOnly) || $scpOnly;
         $shouldBuild = (!$scpOnly && !$buildOnly) || $buildOnly;
 
+        $assets = $this->task(Assets::class);
+
         if ($shouldBuild) {
-            $this->task(Build::class)->run($config);
+            $assets->build($config);
         }
 
         if ($shouldScp) {
-            $this->output->writeLn('SCP');
+            $assets->push($config);
         }
     }
 }
