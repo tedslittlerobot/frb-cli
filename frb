@@ -12,6 +12,11 @@ if (file_exists(__DIR__.'/../../autoload.php')) {
 
 $app = new Symfony\Component\Console\Application('Fortrabbit CLI (Unofficial)', '0.0.1');
 
+// Environmentless commands
+$app->add(new Tlr\Frb\Commands\InitCommand);
+$app->add(new Tlr\Frb\Commands\MakeEnvironmentCommand);
+
+// Environment commands
 $app->add(new Tlr\Frb\Commands\DeployAssetsCommand);
 $app->add(new Tlr\Frb\Commands\DeployCommand);
 $app->add(new Tlr\Frb\Commands\DownloadDirectoryCommand);
