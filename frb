@@ -1,6 +1,9 @@
 #!/usr/bin/env php
 <?php
 
+define('FRB_CLI_PATH', __DIR__);
+define('FRB_RUN_PATH', getcwd());
+
 if (file_exists(__DIR__.'/../../autoload.php')) {
     require __DIR__.'/../../autoload.php';
 } else {

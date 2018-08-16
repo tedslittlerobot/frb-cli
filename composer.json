@@ -12,7 +12,8 @@
     "autoload": {
         "psr-4": {
             "Tlr\\Frb\\": "src/"
-        }
+        },
+        "files": ["src/helpers.php"]
     },
     "require": {
         "guzzlehttp/guzzle": "~6.0",

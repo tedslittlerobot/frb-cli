@@ -25,7 +25,7 @@ class Scp extends AbstractTask
      */
     public function pushDirectory(Config $config, string $directory) : Scp
     {
-        $localDir = $config->root($directory);
+        $localDir = rootPath($directory);
         $remoteDir = $config->remoteWebRootPath($directory);
 
         $this->task(FrbRemote::class)->ensureDirectoryExists($remoteDir);
@@ -58,7 +58,7 @@ class Scp extends AbstractTask
      */
     public function pullDirectory(Config $config, string $directory, string $output = null) : Scp
     {
-        $localDir = $config->root($output ?? $directory);
+        $localDir = rootPath($output ?? $directory);
         $remoteDir = $config->remoteWebRootPath($directory);
 
         $this->formatProgress('Pulling down files from [%s]', $directory);

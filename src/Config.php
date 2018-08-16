@@ -17,20 +17,6 @@ class Config
     protected $environment;
 
     /**
-     * The project root directory
-     *
-     * @var string
-     */
-    protected $root;
-
-    /**
-     * The environment file root directory
-     *
-     * @var string
-     */
-    protected $envRoot;
-
-    /**
      * The raw config data
      *
      * @var array
@@ -41,33 +27,7 @@ class Config
     {
         $this->environment = $environment;
 
-        $this->root    = static::findRoot();
-        $this->envRoot = sprintf('%s/.deploy', $this->root);
-        $this->raw     = static::parseConfig($this->envRoot, $environment);
-    }
-
-    /**
-     * Find the project root
-     *
-     * @return string
-     */
-    public static function findRoot()  : string
-    {
-        $currentDir = __DIR__;
-
-        while ($currentDir) {
-            if ($currentDir === '/') {
-                break;
-            }
-
-            if (is_dir(sprintf('%s/.deploy', $currentDir))) {
-                return $currentDir;
-            }
-
-            $currentDir = dirname($currentDir);
-        }
-
-        throw new \Exception('Unable to find a root directory with a .deploy folder');
+        $this->raw = static::parseConfig(frbEnvPath(), $environment);
     }
 
     /**
@@ -144,29 +104,6 @@ class Config
         }
 
         return $value;
-    }
-
-    /**
-     * Get the project root
-     *
-     * @param string $path
-     * @return string
-     */
-    public function root(string $path = null) : string
-    {
-        return $path ? "{$this->root}/$path" : $this->root;
-    }
-
-    /**
-     * Get the config root
-     * @param string $path
-     * @return string
-     */
-    public function configRootPath(string $path = null) : string
-    {
-        $root = "{$this->root}/.deploy";
-
-        return $path ? "{$root}/$path" : $root;
     }
 
     /**

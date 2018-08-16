@@ -6,7 +6,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tlr\Frb\Commands\AbstractCommand;
 
-abstract class AbstractEnvironmentCommand extends AbstractCommand
+abstract class AbstractEnvironmentlessCommand extends AbstractCommand
 {
     /**
      * Execute the command.
