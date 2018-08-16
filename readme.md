@@ -32,10 +32,12 @@ build_directory :
 ## To Do
 
 - [ ] Add remote command hooks (maintanence mode during deploy?)
-- [ ] Add database details (backup command?)
 - [ ] Add proper output logging
 - [ ] Nicer error handling
 - [ ] Git check on valid branch at start as well as clear stage
+- [ ] E get secrets from FRB command
+- [ ] E DB Backup command?
+- [ ] Download / backup existing build directories to .deploy/tmp, then repush them on fail
 - [x] N init             : Bootstrap a project's .deploy folder
 - [x] N make:env         : Create an environment file
 - [x] E ssh              : SSH into the server
