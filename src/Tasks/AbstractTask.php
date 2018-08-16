@@ -74,13 +74,14 @@ class AbstractTask
      * Write some progress to stdout
      *
      * @param  string $message
+     * @param  string $overrideSection
      * @return Tlr\Frb\Tasks\AbstractTask
      */
-    public function progress(string $message) : AbstractTask
+    public function progress(string $message, string $overrideSection = null) : AbstractTask
     {
         $this->output->writeLn(
             $this->command->getHelper('formatter')
-                ->formatSection($this->section, $message)
+                ->formatSection($overrideSection ?? $this->section, $message)
         );
 
         return $this;
@@ -95,10 +96,10 @@ class AbstractTask
     public function log(Process $output) : AbstractTask
     {
         // @todo - send output to log
-        $this->output->writeLn(
-            $this->command->getHelper('formatter')
-                ->formatSection(':::LOG:::', $output->getOutput())
-        );
+        // $this->output->writeLn(
+        //     $this->command->getHelper('formatter')
+        //         ->formatSection(':::LOG:::', $output->getOutput())
+        // );
 
         return $this;
     }

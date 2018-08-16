@@ -6,6 +6,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tlr\Frb\Commands\AbstractEnvironmentCommand;
 use Tlr\Frb\Config;
+use Tlr\Frb\Tasks\Batch\CheckGitSetup;
+use Tlr\Frb\Tasks\Batch\Deploy;
 
 class TouchDeployCommand extends AbstractEnvironmentCommand
 {

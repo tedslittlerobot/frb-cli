@@ -39,7 +39,7 @@ class Deploy extends AbstractTask
                     $git->pushToFortrabbit($config)
                 ;
 
-                $this->task(Assets::class)->build($config);
+                $this->task(Assets::class)->push($config);
             })
         ;
     }

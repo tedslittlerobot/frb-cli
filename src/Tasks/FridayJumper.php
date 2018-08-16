@@ -39,7 +39,7 @@ class FridayJumper extends AbstractTask
      */
     public function isFriday() : bool
     {
-        return !Carbon::now()->isFriday();
+        return Carbon::now()->isFriday();
     }
 
     /**

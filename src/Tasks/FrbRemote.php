@@ -27,7 +27,7 @@ class FrbRemote extends AbstractTask
      */
     protected function sshProcess(Config $config, string $command) : Process {
         return new Process(sprintf(
-            'ssh % %s',
+            'ssh %s %s',
             $config->sshUrl(),
             $command
         ));
@@ -60,14 +60,14 @@ class FrbRemote extends AbstractTask
      * Make sure the given directory exists on the server
      *
      * @param  Config $config
-     * @param  strint $directory
+     * @param  string $directory
      * @return Tlr\Frb\Tasks\FrbRemote
      */
-    public function ensureDirectoryExists(Config $config, strint $directory) : FrbRemote
+    public function ensureDirectoryExists(Config $config, string $directory) : FrbRemote
     {
         $this->formatProgress('Checking for directory [%s]', $directory);
 
-        $process = $this->sshProcess('mkdir -p ' . $directory);
+        $process = $this->sshProcess($config, 'mkdir -p ' . $directory);
 
         $process->run();
 

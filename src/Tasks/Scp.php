@@ -4,6 +4,7 @@ namespace Tlr\Frb\Tasks;
 
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
+use Tlr\Frb\Config;
 use Tlr\Frb\Tasks\AbstractTask;
 use Tlr\Frb\Tasks\FrbRemote;
 
@@ -28,15 +29,47 @@ class Scp extends AbstractTask
         $localDir = rootPath($directory);
         $remoteDir = $config->remoteWebRootPath($directory);
 
-        $this->task(FrbRemote::class)->ensureDirectoryExists($remoteDir);
+        $this->task(FrbRemote::class)->ensureDirectoryExists($config, $remoteDir);
 
         $this->formatProgress('Pushing up build assets [%s]', $directory);
 
-        new Process(sprintf(
+        $process = new Process(sprintf(
             'scp -r %s "%s:%s"',
             $localDir,
             $config->sshUrl(),
             $remoteDir
+        ));
+
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Push the given file to the server
+     *
+     * @param  Config $config
+     * @param  string $file
+     * @return Tlr\Frb\Tasks\Scp
+     */
+    public function pushFile(Config $config, string $file) : Scp
+    {
+        $localFile = rootPath($file);
+        $targetFile = $config->remoteWebRootPath($file);
+
+        $this->task(FrbRemote::class)->ensureDirectoryExists($config, dirname($targetFile));
+
+        $this->formatProgress('Pushing up build asset [%s]', $file);
+
+        $process = new Process(sprintf(
+            'scp -r %s "%s:%s"',
+            $localFile,
+            $config->sshUrl(),
+            $targetFile
         ));
 
         $process->run();

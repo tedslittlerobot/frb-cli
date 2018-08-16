@@ -49,17 +49,25 @@ class Assets extends AbstractTask
     public function push(Config $config)
     {
         $scp = $this->task(Scp::class);
-        $directories = $config->buildDirectories();
 
-        if ($directories->isEmpty()) {
-            return;
+        $directories = $config->buildDirectories();
+        if ($directories->isNotEmpty()) {
+            $this->formatProgress('Pushing Directories [%s]', $directories->count());
+
+            $directories->each(function($directory) use ($scp, $config) {
+                $scp->pushDirectory($config, $directory);
+            });
         }
 
-        $this->formatProgress('Pushing Directories [%s]', $directories->count());
+        $files = $config->buildFiles();
 
-        $directories->each(function($directory) use ($scp, $config) {
-            $scp->pushDirectory($config, $directory);
-        });
+        if ($files->isNotEmpty()) {
+            $this->formatProgress('Pushing Files [%s]', $files->count());
+
+            $files->each(function($file) use ($scp, $config) {
+                $scp->pushFile($config, $file);
+            });
+        }
 
         return $this;
     }

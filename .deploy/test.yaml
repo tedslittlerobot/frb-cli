@@ -3,9 +3,12 @@ frb_zone           : deploy.eu2.frbit.com
 target_branch      : origin/master
 remote_branch      : master
 
-build_command :
+build_commands :
   - make
   - run
 
-build_directory :
+build_directories :
   - public/build
+
+build_files :
+  - public/build.json

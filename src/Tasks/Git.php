@@ -75,7 +75,7 @@ class Git extends AbstractTask
      */
     public function fetch()
     {
-        $this->progress('Fetching...');
+        $this->progress('Fetching latest code.');
 
         $process = new Process('git fetch --all');
         $process->run();
@@ -85,8 +85,6 @@ class Git extends AbstractTask
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
-
-        $this->progress('Fetched.');
 
         return $this;
     }
@@ -212,6 +210,7 @@ class Git extends AbstractTask
     public function onBranch(string $branch, Callable $callback) : Git
     {
         $initialHead = $this->getCurrentBranch();
+        // @todo - check if current branch is a valid branch! error if its detached.
         $this->checkout($branch);
 
         try {
@@ -244,7 +243,7 @@ class Git extends AbstractTask
      */
     public function pushToFortrabbit(Config $config) : Git
     {
-        $this->progress('Pushing to Fortrabbit');
+        $this->progress('Deploying New Release to Fortrabbit', 'FRB Git');
 
         $process = new Process(sprintf(
             'git push %s %s:%s',

@@ -157,7 +157,7 @@ class Config
      */
     public function buildCommands() : Collection
     {
-        return collect((array) $this->get('build_command', []));
+        return collect((array) $this->get('build_commands', []));
     }
 
     /**
@@ -167,7 +167,17 @@ class Config
      */
     public function buildDirectories() : Collection
     {
-        return collect((array) $this->get('build_directory', []));
+        return collect((array) $this->get('build_directories', []));
+    }
+
+    /**
+     * Get the build files to deploy
+     *
+     * @return Illuminate\Support\Collection
+     */
+    public function buildFiles() : Collection
+    {
+        return collect((array) $this->get('build_files', []));
     }
 
     /**
