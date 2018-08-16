@@ -40,12 +40,11 @@ class MakeEnvironmentCommand extends AbstractEnvironmentlessCommand
      */
     protected function handle(InputInterface $input, OutputInterface $output)
     {
-        $environment = $this->getArgument('env');
-        $root = findProjectRoot();
+        $environment = $input->getArgument('env');
 
         $this
             ->task(EnvironmentManager::class)
-            ->copySampleFileToEnv($root . '.deploy', 'sample.yml', "{$environment}.yml")
+            ->copySampleFileToEnv('sample.yml', "{$environment}.yml")
         ;
     }
 }

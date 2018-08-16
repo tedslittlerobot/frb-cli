@@ -34,8 +34,7 @@ function frbCliPath(string $path = null) : string
  */
 function frbEnvPath(string $path = null) : string
 {
-    $dir = rootPath(runPath());
-    $dir = "$dir/.deploy";
+    $dir = rootPath('.deploy');
 
     return $path ? "$dir/$path" : $dir;
 }
@@ -45,15 +44,17 @@ function frbEnvPath(string $path = null) : string
  *
  * @return string
  */
-function rootPath(string $currentDir)  : string
+function rootPath(string $path = null)  : string
 {
+    $currentDir = runPath();
+
     while ($currentDir) {
         if ($currentDir === '/') {
             break;
         }
 
         if (is_dir(sprintf('%s/.deploy', $currentDir))) {
-            return $currentDir;
+            return $path ? "$currentDir/$path" : $path;
         }
 
         $currentDir = dirname($currentDir);

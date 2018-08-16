@@ -41,10 +41,10 @@ class InitCommand extends AbstractEnvironmentlessCommand
     protected function handle(InputInterface $input, OutputInterface $output)
     {
         $envs = $this->task(EnvironmentManager::class);
-        $envPath = $envs->createEnvDirectory();
+        $envs->createEnvDirectory();
 
-        foreach ($this->getArgument('envs') as $environment) {
-            $envs->copySampleFileToEnv($envPath, 'sample.yml', "{$environment}.yml");
+        foreach ($input->getArgument('envs') as $environment) {
+            $envs->copySampleFileToEnv('sample.yml', "{$environment}.yml");
         }
     }
 }

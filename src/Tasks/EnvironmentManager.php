@@ -18,18 +18,23 @@ class EnvironmentManager extends AbstractTask
      * Create the env directory
      *
      * @param  string $root
-     * @return string
+     * @return Tlr\Frb\Tasks\EnvironmentManager
      */
-    public function createEnvDirectory() : string
+    public function createEnvDirectory() : EnvironmentManager
     {
         $files = new Filesystem;
-        $envPath = runPath('.deploy');
 
-        $files->mkdir($env);
+        $this->progress('Creating .deploy directory');
+
+        if ($files->exists(runPath('.deploy'))) {
+            throw new \Exception('The .deploy directory already exists');
+        }
+
+        $files->mkdir(runPath('.deploy'));
 
         $this->copySampleFileToEnv('.gitignore');
 
-        return $envPath;
+        return $this;
     }
 
     /**
@@ -41,8 +46,18 @@ class EnvironmentManager extends AbstractTask
      */
     public function copySampleFileToEnv(string $file, string $name = null) : EnvironmentManager
     {
+        if ($name) {
+            $this->formatProgress('Creating [%s]', $name);
+        } else {
+            $this->formatProgress('Copying [%s]', $file);
+        }
+
         $files = new Filesystem;
         $filename = $name ?? $file;
+
+        if ($files->exists(frbEnvPath($filename))) {
+            throw new \Exception(sprintf('The file [%s] already exists', frbEnvPath($filename)));
+        }
 
         $files->copy(frbCliPath("fragments/$file"), frbEnvPath($filename));
 
