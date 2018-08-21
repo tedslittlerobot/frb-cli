@@ -53,7 +53,7 @@ class Git extends AbstractTask
     /**
      * Ensure the staging area is clear!
      *
-     * @return Git
+     * @return Tlr\Frb\Tasks\Git
      */
     public function ensureStageIsClean() : Git
     {
@@ -62,6 +62,34 @@ class Git extends AbstractTask
         }
 
         return $this;
+    }
+
+    /**
+     * Check if the fortrabbit remote has already been pushed to
+     *
+     * @return bool
+     */
+    public function fortrabbitRemoteNeedsConfiguring(Config $config) : bool
+    {
+        $process = new Process('git branch -a');
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        $remoteBranchExists = collect(explode(PHP_EOL, $process->getOutput()))
+            ->map(function($branch) {
+                return trim($branch);
+            })
+            ->first(function($branch) use ($config) {
+                $target = sprintf('remotes/%s/%s', $config->fortrabbitRemoteName(), $config->remoteBranch());
+
+                return starts_with($branch, $target);
+            })
+        ;
+
+        return !$remoteBranchExists;
     }
 
     /**

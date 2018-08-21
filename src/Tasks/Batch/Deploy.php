@@ -21,22 +21,22 @@ class Deploy extends AbstractTask
      * Run the task!
      *
      * @param  Config $config
-     * @param  boolean $firstTime
      * @return void
      */
-    public function deploy(Config $config, bool $firstTime = false)
+    public function deploy(Config $config)
     {
         $this->task(FridayJumper::class)->run();
 
-        $this->task(Git::class)
-            ->ensureStageIsClean()
-            ->fetch()
-            ->onBranch($config->targetBranch(), function($git, $command, $input, $output) use ($config, $firstTime) {
+        $git = $this->task(Git::class);
+
+        $git->ensureStageIsClean()->fetch();
+        $needsRemoteConfig = $git->fortrabbitRemoteNeedsConfiguring($config);
+        $git->onBranch($config->targetBranch(), function($git, $command, $input, $output) use ($config, $firstTime) {
                 $this->task(Assets::class)->build($config);
 
                 // @todo - pre deploy hooks (remote) - maintanence mode
 
-                $firstTime ?
+                $needsRemoteConfig ?
                     $git->firstPushToFortrabbit($config) :
                     $git->pushToFortrabbit($config)
                 ;
@@ -46,17 +46,6 @@ class Deploy extends AbstractTask
                 // @todo - pre deploy hooks (remote) - maintanence mode
             })
         ;
-    }
-
-    /**
-     * Run the first deploy!
-     *
-     * @param  Config $config
-     * @return void
-     */
-    public function firstDeploy(Config $config)
-    {
-        return $this->deploy($config, true);
     }
 
     /**

@@ -144,13 +144,10 @@ Runs an assets-only deploy - building and pushing assets to the remote server.
 Runs a reset command on the remote server. Warning - this is a destructive command!
 
 
-
-
-
 ## To Do
 
 - [ ] Add remote command hooks (maintanence mode during deploy?)
-- [ ] Detect remote server status and run :first if it needs it...!
+- [x] Detect remote server status and run :first if it needs it...!
 - [x] Detect (isFile()) the build-push targets and run the directory / file task for whichever type it is 
 - [ ] Add confirmation to the reset command
 - [x] E add remote:run command for running single commands
