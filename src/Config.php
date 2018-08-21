@@ -161,23 +161,13 @@ class Config
     }
 
     /**
-     * Get the build directories to deploy
-     *
-     * @return Illuminate\Support\Collection
-     */
-    public function buildDirectories() : Collection
-    {
-        return collect((array) $this->get('build_directories', []));
-    }
-
-    /**
      * Get the build files to deploy
      *
      * @return Illuminate\Support\Collection
      */
-    public function buildFiles() : Collection
+    public function buildOutputs() : Collection
     {
-        return collect((array) $this->get('build_files', []));
+        return collect((array) $this->get('build_output', []));
     }
 
     /**

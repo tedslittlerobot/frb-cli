@@ -2,6 +2,7 @@
 
 namespace Tlr\Frb\Tasks;
 
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Tlr\Frb\Config;
@@ -16,6 +17,28 @@ class Scp extends AbstractTask
      * @var string
      */
     protected $section = 'SCP';
+
+    /**
+     * Push the given path to the server
+     *
+     * @param  Config $config
+     * @param  string $path
+     * @return Tlr\Frb\Tasks\Scp
+     */
+    public function pushPath(Config $config, string $path) : Scp
+    {
+        $files = new Filesystem;
+        $absolutePath = rootPath($path);
+
+        if (!$files->exists($absolutePath)) {
+            throw new \Exception(sprintf('Nothing exists at path [%s]', $path));
+        }
+
+        return is_dir($absolutePath) ?
+            $this->pushDirectory($config, $path) :
+            $this->pushFile($config, $path)
+        ;
+    }
 
     /**
      * Push the given directory to the server

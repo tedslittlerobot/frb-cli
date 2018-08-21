@@ -7,8 +7,6 @@ build_commands :
   - make
   - run
 
-build_directories :
+build_output :
   - public/build
-
-build_files :
   - public/build.json
