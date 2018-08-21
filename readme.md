@@ -153,7 +153,7 @@ Runs a reset command on the remote server. Warning - this is a destructive comma
 - [ ] Detect remote server status and run :first if it needs it...!
 - [x] Detect (isFile()) the build-push targets and run the directory / file task for whichever type it is 
 - [ ] Add confirmation to the reset command
-- [ ] E add remote:run command for running single commands
+- [x] E add remote:run command for running single commands
 - [ ] Add proper output logging
 - [ ] Nicer error handling
 - [ ] Git check on valid branch at start as well as clear stage

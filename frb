@@ -22,6 +22,7 @@ $app->add(new Tlr\Frb\Commands\DeployCommand);
 $app->add(new Tlr\Frb\Commands\DownloadDirectoryCommand);
 $app->add(new Tlr\Frb\Commands\DownloadDirectoryCommand);
 $app->add(new Tlr\Frb\Commands\FirstDeployCommand);
+$app->add(new Tlr\Frb\Commands\RemoteRunCommand);
 $app->add(new Tlr\Frb\Commands\ResetRemoteCommand);
 $app->add(new Tlr\Frb\Commands\SshCommand);
 $app->add(new Tlr\Frb\Commands\TouchDeployCommand);

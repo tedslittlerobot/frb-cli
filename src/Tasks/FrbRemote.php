@@ -34,6 +34,37 @@ class FrbRemote extends AbstractTask
     }
 
     /**
+     * Run a generic command against the server
+     *
+     * @param  Config $config
+     * @return Tlr\Frb\Tasks\FrbRemote
+     */
+    public function run(Config $config, string $command) : FrbRemote
+    {
+        $this->progress('Running Command against the remote...');
+
+        $process = $this->sshProcess($config, $command);
+
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        $result = trim($process->getOutput());
+
+        if (!$result) {
+            $this->progress('Success.');
+        } else {
+            $this->progress('Output:');
+
+            $this->output->writeLn($result);
+        }
+
+        return $this;
+    }
+
+    /**
      * Run a reset command
      *
      * @param  Config $config
