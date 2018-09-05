@@ -183,7 +183,7 @@ class Git extends AbstractTask
      */
     public function getCurrentBranch() : string
     {
-        $this->runProcess(new Process('git branch'));
+        $process = $this->runProcess(new Process('git branch'));
 
         $branches = collect(explode(PHP_EOL, $process->getOutput()));
 

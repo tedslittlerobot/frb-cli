@@ -71,7 +71,7 @@ class AbstractTask
      */
     public function task(string $class) : AbstractTask
     {
-        return new $class($this->command, $this->input, $this->output);
+        return new $class($this->command, $this->input, $this->output, $this->log);
     }
 
     /**
@@ -107,17 +107,33 @@ class AbstractTask
         return $this;
     }
 
+    /**
+     * Get the log context
+     *
+     * @return array
+     */
     public function logContext() : array
     {
         $context = [];
 
         if (static::$debugging) {
+            $offset = 0;
+
+            foreach ([0, 1, 2, 3, 4, 5] as $potentialOffset) {
+                if (debug_backtrace()[$potentialOffset]['class'] === AbstractTask::class) {
+                    $offset = $potentialOffset;
+                } else {
+                    $offset = $potentialOffset;
+                    break;
+                }
+            }
+
             $callerInfo = sprintf(
                 '%s@%s %s:%s',
-                debug_backtrace()[2]['class'],
-                debug_backtrace()[2]['function'],
-                debug_backtrace()[1]['file'],
-                debug_backtrace()[1]['line']
+                debug_backtrace()[$offset]['class'],
+                debug_backtrace()[$offset]['function'],
+                debug_backtrace()[max(0, $offset - 1)]['file'],
+                debug_backtrace()[max(0, $offset - 1)]['line']
             );
 
             $context['caller'] = $callerInfo;
