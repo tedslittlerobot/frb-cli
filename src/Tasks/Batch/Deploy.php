@@ -31,7 +31,7 @@ class Deploy extends AbstractTask
 
         $git->ensureStageIsClean()->fetch();
         $needsRemoteConfig = $git->fortrabbitRemoteNeedsConfiguring($config);
-        $git->onBranch($config->targetBranch(), function($git, $command, $input, $output) use ($config, $firstTime) {
+        $git->onBranch($config->targetBranch(), function($git, $command, $input, $output) use ($config, $needsRemoteConfig) {
                 $this->task(Assets::class)->build($config);
 
                 // @todo - pre deploy hooks (remote) - maintanence mode
