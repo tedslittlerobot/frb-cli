@@ -43,13 +43,7 @@ class FrbRemote extends AbstractTask
     {
         $this->progress('Running Command against the remote...');
 
-        $process = $this->sshProcess($config, $command);
-
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
+        $process = $this->runProcess($this->sshProcess($config, $command));
 
         $result = trim($process->getOutput());
 
@@ -74,13 +68,7 @@ class FrbRemote extends AbstractTask
     {
         $this->progress('Running Reset Command...');
 
-        $process = $this->sshProcess($config, 'reset');
-
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
+        $process = $this->runProcess($this->sshProcess($config, 'reset'));
 
         $this->progress('Done.');
 
@@ -98,13 +86,7 @@ class FrbRemote extends AbstractTask
     {
         $this->formatProgress('Checking for directory [%s]', $directory);
 
-        $process = $this->sshProcess($config, 'mkdir -p ' . $directory);
-
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
+        $process = $this->runProcess($this->sshProcess($config, 'mkdir -p ' . $directory));
 
         return $this;
     }

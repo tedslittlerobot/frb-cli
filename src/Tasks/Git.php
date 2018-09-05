@@ -27,15 +27,10 @@ class Git extends AbstractTask
      */
     public function stageIsDirty() : bool
     {
-        $process = new Process('git status --porcelain');
-
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
-
-        $stage = $process->getOutput();
+        $stage = $this
+            ->runProcess(new Process('git status --porcelain'))
+            ->getOutput()
+        ;
 
         return !!trim($stage);
     }
@@ -71,12 +66,7 @@ class Git extends AbstractTask
      */
     public function fortrabbitRemoteNeedsConfiguring(Config $config) : bool
     {
-        $process = new Process('git branch -a');
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
+        $process = $this->runProcess(new Process('git branch -a'));
 
         $remoteBranchExists = collect(explode(PHP_EOL, $process->getOutput()))
             ->map(function($branch) {
@@ -105,14 +95,7 @@ class Git extends AbstractTask
     {
         $this->progress('Fetching latest code.');
 
-        $process = new Process('git fetch --all');
-        $process->run();
-
-        $this->log($process);
-
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
+        $this->runProcess(new Process('git fetch --all'));
 
         return $this;
     }
@@ -128,17 +111,11 @@ class Git extends AbstractTask
     {
         $this->formatProgress('Adding Remote: [%s : %s]', $name, $url);
 
-        $process = new Process(sprintf(
+        $process = $this->runProcess(new Process(sprintf(
             'git remote add %s %s',
             $name,
             $url
-        ));
-
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
+        )));
 
         return $this;
     }
@@ -164,8 +141,7 @@ class Git extends AbstractTask
      */
     public function hasRemote(string $remote) : bool
     {
-        $process = new Process('git remote');
-        $process->run();
+        $process = $this->runProcess(new Process('git remote'));
 
         return str_contains($process->getOutput(), $remote);
     }
@@ -195,12 +171,7 @@ class Git extends AbstractTask
     {
         $this->progress('Checking out ' . $branch);
 
-        $process = new Process('git checkout ' . $branch);
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
+        $process = $this->runProcess(new Process('git checkout ' . $branch));
 
         return $this;
     }
@@ -212,12 +183,7 @@ class Git extends AbstractTask
      */
     public function getCurrentBranch() : string
     {
-        $process = new Process('git branch');
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
+        $this->runProcess(new Process('git branch'));
 
         $branches = collect(explode(PHP_EOL, $process->getOutput()));
 
@@ -273,17 +239,12 @@ class Git extends AbstractTask
     {
         $this->progress('Deploying New Release to Fortrabbit', 'FRB Git');
 
-        $process = new Process(sprintf(
+        $process = $this->runProcess(new Process(sprintf(
             'git push %s %s:%s',
             $config->fortrabbitRemoteName(),
             $config->targetBranch(),
             $config->remoteBranch()
-        ));
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
+        )));
 
         return $this;
     }
@@ -298,17 +259,12 @@ class Git extends AbstractTask
     {
         $this->progress('Pushing to Fortrabbit');
 
-        $process = new Process(sprintf(
+        $process = $this->runProcess(new Process(sprintf(
             'git push -u %s %s:refs/heads/%s',
             $config->fortrabbitRemoteName(),
             $config->targetBranch(),
             $config->remoteBranch()
-        ));
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
+        )));
 
         return $this;
     }

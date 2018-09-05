@@ -56,18 +56,12 @@ class Scp extends AbstractTask
 
         $this->formatProgress('Pushing up build assets [%s]', $directory);
 
-        $process = new Process(sprintf(
+        $process = $this->runProcess(new Process(sprintf(
             'scp -r %s "%s:%s"',
             $localDir,
             $config->sshUrl(),
             $remoteDir
-        ));
-
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
+        )));
 
         return $this;
     }
@@ -88,18 +82,12 @@ class Scp extends AbstractTask
 
         $this->formatProgress('Pushing up build asset [%s]', $file);
 
-        $process = new Process(sprintf(
+        $process = $this->runProcess(new Process(sprintf(
             'scp -r %s "%s:%s"',
             $localFile,
             $config->sshUrl(),
             $targetFile
-        ));
-
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
+        )));
 
         return $this;
     }
@@ -119,18 +107,12 @@ class Scp extends AbstractTask
 
         $this->formatProgress('Pulling down files from [%s]', $directory);
 
-        new Process(sprintf(
+        $this->runProcess(new Process(sprintf(
             'scp -r "%s:%s" %s',
             $remoteDir,
             $config->sshUrl(),
             $localDir
-        ));
-
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
+        )));
 
         return $this;
     }

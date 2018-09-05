@@ -26,13 +26,7 @@ class Build extends AbstractTask
     {
         $this->formatProgress('Running Build Command [%s]', $command);
 
-        $process = new Process($command);
-
-        $process->setTimeout(60 * 15)->run();
-
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
+        $this->runProcess((new Process($command))->setTimeout(60 * 15));
 
         return $this;
     }

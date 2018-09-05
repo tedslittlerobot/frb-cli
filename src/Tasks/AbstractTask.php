@@ -2,6 +2,7 @@
 
 namespace Tlr\Frb\Tasks;
 
+use Monolog\Logger;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -10,6 +11,13 @@ use Symfony\Component\Process\Process;
 
 class AbstractTask
 {
+    /**
+     * Whether or not we are debugging
+     *
+     * @var boolean
+     */
+    protected static $debugging = true;
+
     /**
      * The command instance
      *
@@ -40,11 +48,19 @@ class AbstractTask
      */
     protected $section;
 
-    public function __construct(Command $command, InputInterface $input, OutputInterface $output)
+    /**
+     * The logger instance
+     *
+     * @var Monolog\Logger
+     */
+    protected $log;
+
+    public function __construct(Command $command, InputInterface $input, OutputInterface $output, Logger $log)
     {
         $this->command = $command;
         $this->input   = $input;
         $this->output  = $output;
+        $this->log     = $log;
     }
 
     /**
@@ -77,14 +93,59 @@ class AbstractTask
      * @param  string $overrideSection
      * @return Tlr\Frb\Tasks\AbstractTask
      */
-    public function progress(string $message, string $overrideSection = null) : AbstractTask
+    public function progress(string $message, string $overrideSection = null, bool $shouldLog = true) : AbstractTask
     {
+        if ($shouldLog) {
+            $this->log->warning($message, $this->logContext());
+        }
+
         $this->output->writeLn(
             $this->command->getHelper('formatter')
                 ->formatSection($overrideSection ?? $this->section, $message)
         );
 
         return $this;
+    }
+
+    public function logContext() : array
+    {
+        $context = [];
+
+        if (static::$debugging) {
+            $callerInfo = sprintf(
+                '%s@%s %s:%s',
+                debug_backtrace()[2]['class'],
+                debug_backtrace()[2]['function'],
+                debug_backtrace()[1]['file'],
+                debug_backtrace()[1]['line']
+            );
+
+            $context['caller'] = $callerInfo;
+        }
+
+        return $context;
+    }
+
+    /**
+     * Run a process
+     *
+     * @param  Symfony\Component\Process\Process $process
+     * @return Symfony\Component\Process\Process
+     */
+    public function runProcess(Process $process)
+    {
+        $this->log->notice($process->getCommandLine(), $this->logContext());
+
+        $process->run();
+
+        if ($process->isSuccessful()) {
+            $this->log->info($process->getOutput());
+        } else {
+            $this->log->error($process->getOutput());
+            throw new ProcessFailedException($process);
+        }
+
+        return $process;
     }
 
     /**

@@ -31,6 +31,8 @@ abstract class AbstractEnvironmentCommand extends AbstractCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->env = $input->getArgument('environment');
+
         parent::execute($input, $output);
 
         $headers = new HeaderWriter($this, $output);

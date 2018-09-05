@@ -22,7 +22,8 @@
         "symfony/process": "~3.0|~4.0",
         "symfony/yaml": "^4.1",
         "illuminate/support": "5.*",
-        "symfony/finder": "^4.1"
+        "symfony/finder": "^4.1",
+        "monolog/monolog": "^1.23"
     },
     "bin": [
         "frb"

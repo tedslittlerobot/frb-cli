@@ -15,6 +15,7 @@ $app = new Symfony\Component\Console\Application('Fortrabbit CLI (Unofficial)', 
 // Environmentless commands
 $app->add(new Tlr\Frb\Commands\InitCommand);
 $app->add(new Tlr\Frb\Commands\MakeEnvironmentCommand);
+$app->add(new Tlr\Frb\Commands\CleanLogsCommand);
 
 // Environment commands
 $app->add(new Tlr\Frb\Commands\DeployAssetsCommand);

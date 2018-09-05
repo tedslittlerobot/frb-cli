@@ -3,6 +3,7 @@
 namespace Tlr\Frb\Tasks;
 
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 use Tlr\Frb\Tasks\AbstractTask;
 
 class EnvironmentManager extends AbstractTask
@@ -60,6 +61,28 @@ class EnvironmentManager extends AbstractTask
         }
 
         $files->copy(frbCliPath("fragments/$file"), frbEnvPath($filename));
+
+        return $this;
+    }
+
+    /**
+     * Clean the logs in the given folder
+     *
+     * @param  string $folder
+     * @return Tlr\Frb\Tasks\EnvironmentManager
+     */
+    public function cleanLogs(string $folder) : EnvironmentManager
+    {
+        $finder = (new Finder)->files()->in($folder)->name('*.log');
+        $files = new Filesystem;
+
+        $this->progress(sprintf('Cleaning up %s log files.', $finder->count()), null, false);
+
+        foreach ($finder as $file) {
+            $files->remove($file->getRealPath());
+        }
+
+        $this->progress('Done.', null, false);
 
         return $this;
     }
