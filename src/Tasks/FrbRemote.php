@@ -74,7 +74,7 @@ class FrbRemote extends AbstractTask
     {
         $this->progress('Running Reset Command...');
 
-        $process = $this->sshProcess('reset');
+        $process = $this->sshProcess($config, 'reset');
 
         $process->run();
 

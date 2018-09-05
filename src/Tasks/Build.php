@@ -28,7 +28,7 @@ class Build extends AbstractTask
 
         $process = new Process($command);
 
-        $process->run();
+        $process->setTimeout(60 * 15)->run();
 
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);

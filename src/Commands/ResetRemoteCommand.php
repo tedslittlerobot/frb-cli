@@ -7,6 +7,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Tlr\Frb\Commands\AbstractEnvironmentCommand;
 use Tlr\Frb\Config;
 use Tlr\Frb\Tasks\FrbRemote;
+use Tlr\Frb\Tasks\Git;
 
 class ResetRemoteCommand extends AbstractEnvironmentCommand
 {
@@ -41,5 +42,6 @@ class ResetRemoteCommand extends AbstractEnvironmentCommand
     protected function handle(Config $config, InputInterface $input, OutputInterface $output)
     {
         $this->task(FrbRemote::class)->reset($config);
+        $this->task(Git::class)->fetch();
     }
 }
