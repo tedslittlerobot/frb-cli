@@ -59,7 +59,7 @@ class Assets extends AbstractTask
             }
 
             $outputs->each(function($directory) use ($scp, $config) {
-                $scp->pushDirectory($config, $directory);
+                $scp->pushPath($config, $directory);
             });
         }
 
