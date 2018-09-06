@@ -42,6 +42,6 @@ class ResetRemoteCommand extends AbstractEnvironmentCommand
     protected function handle(Config $config, InputInterface $input, OutputInterface $output)
     {
         $this->task(FrbRemote::class)->reset($config);
-        $this->task(Git::class)->fetch();
+        $this->task(Git::class)->fetch($config->fortrabbitRemoteName(), true);
     }
 }

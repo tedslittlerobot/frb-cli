@@ -20,10 +20,11 @@ class Deploy extends AbstractTask
     /**
      * Run the task!
      *
-     * @param  Config $config
+     * @param  Tlr\Frb\Config $config
+     * @param  bool $withAssets
      * @return void
      */
-    public function deploy(Config $config)
+    public function deploy(Config $config, bool $withAssets = true)
     {
         $this->task(FridayJumper::class)->run();
 
@@ -31,8 +32,12 @@ class Deploy extends AbstractTask
 
         $git->ensureStageIsClean()->fetch();
         $needsRemoteConfig = $git->fortrabbitRemoteNeedsConfiguring($config);
-        $git->onBranch($config->targetBranch(), function($git, $command, $input, $output) use ($config, $needsRemoteConfig) {
-                $this->task(Assets::class)->build($config);
+
+        $git->onBranch($config->targetBranch(), function($git, $command, $input, $output) use ($config, $needsRemoteConfig, $withAssets) {
+
+                if ($withAssets) {
+                    $this->task(Assets::class)->build($config);
+                }
 
                 // @todo - pre deploy hooks (remote) - maintanence mode
 
@@ -41,7 +46,9 @@ class Deploy extends AbstractTask
                     $git->pushToFortrabbit($config)
                 ;
 
-                $this->task(Assets::class)->push($config);
+                if ($withAssets) {
+                    $this->task(Assets::class)->push($config);
+                }
 
                 // @todo - pre deploy hooks (remote) - maintanence mode
             })
@@ -56,14 +63,6 @@ class Deploy extends AbstractTask
      */
     public function touch(Config $config)
     {
-        $this->task(FridayJumper::class)->run();
-
-        $this->task(Git::class)
-            ->ensureStageIsClean()
-            ->fetch()
-            ->onBranch($config->targetBranch(), function($git, $command, $input, $output) use ($config) {
-                $git->pushToFortrabbit($config);
-            })
-        ;
+        $this->deploy($config, false);
     }
 }

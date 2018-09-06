@@ -89,13 +89,20 @@ class Git extends AbstractTask
     /**
      * Run a git fetch command
      *
+     * @param  boolean $prune
      * @return Tlr\Frb\Tasks\Git
      */
-    public function fetch()
+    public function fetch(string $branch = '--all', bool $prune = false)
     {
         $this->progress('Fetching latest code.');
 
-        $this->runProcess(new Process('git fetch --all'));
+        $command = 'git fetch ' . $branch;
+
+        if ($prune) {
+            $command .= ' --prune';
+        }
+
+        $this->runProcess(new Process($command));
 
         return $this;
     }
