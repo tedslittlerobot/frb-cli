@@ -2,6 +2,7 @@
 
 namespace Tlr\Frb\Tasks;
 
+use AFM\Rsync\Rsync as Remote;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
@@ -9,26 +10,44 @@ use Tlr\Frb\Config;
 use Tlr\Frb\Tasks\AbstractTask;
 use Tlr\Frb\Tasks\FrbRemote;
 
-/**
- * @deprecated in favour of Rsync
- */
-class Scp extends AbstractTask
+class Rsync extends AbstractTask
 {
     /**
      * The "section" name for the task.
      *
      * @var string
      */
-    protected $section = 'SCP';
+    protected $section = 'R-Sync';
+
+    /**
+     * The cached rsync instance
+     *
+     * @var AFM\Rsync\Rsync
+     */
+    protected $remote;
+
+    public function remote(Config $config) : Remote
+    {
+        if (!$this->remote) {
+            $this->remote = new Remote([
+                'ssh' => [
+                    'username' => $config->projectName(),
+                    'host' => $config->fortrabbitServer(),
+                ],
+            ]);
+        }
+
+        return $this->remote;
+    }
 
     /**
      * Push the given path to the server
      *
      * @param  Config $config
      * @param  string $path
-     * @return Tlr\Frb\Tasks\Scp
+     * @return Tlr\Frb\Tasks\Rsync
      */
-    public function pushPath(Config $config, string $path) : Scp
+    public function pushPath(Config $config, string $path) : Rsync
     {
         $files = new Filesystem;
         $absolutePath = rootPath($path);
@@ -48,9 +67,9 @@ class Scp extends AbstractTask
      *
      * @param  Config $config
      * @param  string $directory
-     * @return Tlr\Frb\Tasks\Scp
+     * @return Tlr\Frb\Tasks\Rsync
      */
-    public function pushDirectory(Config $config, string $directory) : Scp
+    public function pushDirectory(Config $config, string $directory) : Rsync
     {
         $localDir = rootPath($directory);
         $remoteDir = $config->remoteWebRootPath($directory);
@@ -60,7 +79,7 @@ class Scp extends AbstractTask
         $this->formatProgress('Pushing up build assets [%s]', $directory);
 
         $process = $this->runProcess(new Process(sprintf(
-            'scp -r %s "%s:%s"',
+            'rsync -avz %s "%s:%s"',
             $localDir,
             $config->sshUrl(),
             dirname($remoteDir)
@@ -74,9 +93,9 @@ class Scp extends AbstractTask
      *
      * @param  Config $config
      * @param  string $file
-     * @return Tlr\Frb\Tasks\Scp
+     * @return Tlr\Frb\Tasks\Rsync
      */
-    public function pushFile(Config $config, string $file) : Scp
+    public function pushFile(Config $config, string $file) : Rsync
     {
         $localFile = rootPath($file);
         $targetFile = $config->remoteWebRootPath($file);
@@ -86,7 +105,7 @@ class Scp extends AbstractTask
         $this->formatProgress('Pushing up build asset [%s]', $file);
 
         $process = $this->runProcess(new Process(sprintf(
-            'scp -r %s "%s:%s"',
+            'rsync -avz %s "%s:%s"',
             $localFile,
             $config->sshUrl(),
             $targetFile
@@ -101,10 +120,12 @@ class Scp extends AbstractTask
      * @param  Config $config
      * @param  string $directory
      * @param  string $output
-     * @return Tlr\Frb\Tasks\Scp
+     * @return Tlr\Frb\Tasks\Rsync
      */
-    public function pullDirectory(Config $config, string $directory, string $output = null) : Scp
+    public function pullDirectory(Config $config, string $directory, string $output = null) : Rsync
     {
+        throw new \Exception('RSync pull is not finished yet');
+
         $localDir = rootPath($output ?? $directory);
         $remoteDir = $config->remoteWebRootPath($directory);
 

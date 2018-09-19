@@ -23,7 +23,8 @@
         "symfony/yaml": "^4.1",
         "illuminate/support": "5.*",
         "symfony/finder": "^4.1",
-        "monolog/monolog": "^1.23"
+        "monolog/monolog": "^1.23",
+        "albertofem/rsync-lib": "^1.0"
     },
     "bin": [
         "frb"

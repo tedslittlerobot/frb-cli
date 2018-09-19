@@ -131,6 +131,16 @@ class Config
     }
 
     /**
+     * Get the server name in fortrabbit
+     *
+     * @return string
+     */
+    public function fortrabbitServer() : string
+    {
+        return (string) $this->getOrError('frb_zone');
+    }
+
+    /**
      * Get local branch to deploy from
      *
      * @return string
@@ -190,7 +200,7 @@ class Config
         return sprintf(
             '%s@%s:%s.git',
             $this->projectName(),
-            $this->getOrError('frb_zone'),
+            $this->fortrabbitServer(),
             $this->projectName()
         );
     }
@@ -205,7 +215,7 @@ class Config
         return sprintf(
             '%s@%s',
             $this->projectName(),
-            $this->getOrError('frb_zone')
+            $this->fortrabbitServer()
         );
     }
 

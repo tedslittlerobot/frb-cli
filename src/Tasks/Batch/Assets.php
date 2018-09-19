@@ -5,6 +5,7 @@ namespace Tlr\Frb\Tasks\Batch;
 use Tlr\Frb\Config;
 use Tlr\Frb\Tasks\AbstractTask;
 use Tlr\Frb\Tasks\Build;
+use Tlr\Frb\Tasks\Rsync;
 use Tlr\Frb\Tasks\Scp;
 
 class Assets extends AbstractTask
@@ -52,7 +53,7 @@ class Assets extends AbstractTask
      */
     public function push(Config $config)
     {
-        $scp = $this->task(Scp::class);
+        $scp = $this->task(Rsync::class);
 
         $outputs = $config->buildOutputs();
         if ($outputs->isNotEmpty()) {
