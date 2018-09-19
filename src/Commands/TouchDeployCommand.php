@@ -8,6 +8,7 @@ use Tlr\Frb\Commands\AbstractEnvironmentCommand;
 use Tlr\Frb\Config;
 use Tlr\Frb\Tasks\Batch\CheckGitSetup;
 use Tlr\Frb\Tasks\Batch\Deploy;
+use Tlr\Frb\Tasks\Notification;
 
 class TouchDeployCommand extends AbstractEnvironmentCommand
 {
@@ -43,5 +44,7 @@ class TouchDeployCommand extends AbstractEnvironmentCommand
     {
         $this->task(CheckGitSetup::class)->run($config);
         $this->task(Deploy::class)->touch($config);
+
+        $this->task(Notification::class)->success($config, 'Code deployed!');
     }
 }

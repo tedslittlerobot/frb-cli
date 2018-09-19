@@ -141,6 +141,16 @@ class Config
     }
 
     /**
+     * Get the server name in fortrabbit
+     *
+     * @return string
+     */
+    public function appUrl()
+    {
+        return $this->get('url');
+    }
+
+    /**
      * Get local branch to deploy from
      *
      * @return string

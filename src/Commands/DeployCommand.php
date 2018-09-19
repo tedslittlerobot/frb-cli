@@ -9,6 +9,7 @@ use Tlr\Frb\Config;
 use Tlr\Frb\Tasks\Batch\CheckGitSetup;
 use Tlr\Frb\Tasks\Batch\Deploy;
 use Tlr\Frb\Tasks\FridayJumper;
+use Tlr\Frb\Tasks\Notification;
 
 class DeployCommand extends AbstractEnvironmentCommand
 {
@@ -44,5 +45,7 @@ class DeployCommand extends AbstractEnvironmentCommand
     {
         $this->task(CheckGitSetup::class)->run($config);
         $this->task(Deploy::class)->deploy($config);
+
+        $this->task(Notification::class)->success($config, 'Application Deployed!');
     }
 }

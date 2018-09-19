@@ -9,6 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Tlr\Frb\Commands\AbstractCommand;
 use Tlr\Frb\Config;
 use Tlr\Frb\HeaderWriter;
+use Tlr\Frb\Tasks\Notification;
 
 abstract class AbstractEnvironmentCommand extends AbstractCommand
 {
@@ -39,7 +40,13 @@ abstract class AbstractEnvironmentCommand extends AbstractCommand
         $config  = new Config($input->getArgument('environment'));
         $headers->envTitle($config);
 
-        $this->handle($config, $input, $output);
+        try {
+            $this->handle($config, $input, $output);
+        } catch (\Exception $e) {
+            $this->task(Notification::class)->error($config, 'There was a problem...');
+
+            throw $e;
+        }
     }
 
     /**

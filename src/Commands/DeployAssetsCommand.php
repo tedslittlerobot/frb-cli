@@ -8,6 +8,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Tlr\Frb\Commands\AbstractEnvironmentCommand;
 use Tlr\Frb\Config;
 use Tlr\Frb\Tasks\Batch\Assets;
+use Tlr\Frb\Tasks\Notification;
 
 class DeployAssetsCommand extends AbstractEnvironmentCommand
 {
@@ -72,5 +73,16 @@ class DeployAssetsCommand extends AbstractEnvironmentCommand
         if ($shouldScp) {
             $assets->push($config);
         }
+
+        $message = 'Assets Built & Deployed!';
+
+        if ($scpOnly) {
+            $message = 'Assets Uploaded!';
+        } elseif ($buildOnly) {
+            $message = 'Assets Built!';
+        }
+
+        $this->task(Notification::class)->success($config, $message);
+
     }
 }
