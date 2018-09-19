@@ -79,12 +79,14 @@ In most circumstances, this should not be changed. Fortrabbit uses the master br
 
 #### build_commands
 
-A list of build commands to be run locally to generate the site's assets. For example, 
+A list of build commands to be run locally to generate the site's assets. You can specify a directory to run the command in as well - for example, 
 
 ```bash
 build_commands :
   - yarn
   - yarn run production
+  - run: yarn run && yarn run production
+    in: web/app/themes/MyTheme
 ```
 
 #### build_directories

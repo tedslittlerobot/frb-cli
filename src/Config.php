@@ -157,7 +157,17 @@ class Config
      */
     public function buildCommands() : Collection
     {
-        return collect((array) $this->get('build_commands', []));
+        return collect((array) $this->get('build_commands', []))
+            ->map(function($command) {
+                if (is_array($command)) {
+                    return $command;
+                }
+
+                return [
+                    'run' => $command,
+                    'in' => null,
+                ];
+            });
     }
 
     /**

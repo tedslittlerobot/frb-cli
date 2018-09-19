@@ -22,11 +22,15 @@ class Build extends AbstractTask
      * @param  Config $config
      * @return Tlr\Frb\Tasks\Build
      */
-    public function build(Config $config, string $command) : Build
+    public function build(Config $config, string $command, ?string $in) : Build
     {
-        $this->formatProgress('Running Build Command [%s]', $command);
+        if ($in) {
+            $this->formatProgress('Running Build Command [%s] in [%s]', $command, $in);
+        } else {
+            $this->formatProgress('Running Build Command [%s]', $command);
+        }
 
-        $this->runProcess((new Process($command))->setTimeout(60 * 15));
+        $this->runProcess((new Process($command, rootPath($in)))->setTimeout(60 * 15));
 
         return $this;
     }

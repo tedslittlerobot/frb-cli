@@ -34,7 +34,11 @@ class Assets extends AbstractTask
         $this->formatProgress('Running Build Commands [%s]', $commands->count());
 
         $commands->each(function($command) use ($builder, $config) {
-            $builder->build($config, $command);
+            $builder->build(
+                $config,
+                $command['run'],
+                $command['in'] ?? null
+            );
         });
 
         return $this;
