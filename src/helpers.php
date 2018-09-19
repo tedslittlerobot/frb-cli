@@ -54,7 +54,7 @@ function rootPath(string $path = null)  : string
         }
 
         if (is_dir(sprintf('%s/.deploy', $currentDir))) {
-            return $path ? "$currentDir/$path" : $path;
+            return $path ? "$currentDir/$path" : $currentDir;
         }
 
         $currentDir = dirname($currentDir);

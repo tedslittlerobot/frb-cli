@@ -246,12 +246,14 @@ class Git extends AbstractTask
     {
         $this->progress('Deploying New Release to Fortrabbit', 'FRB Git');
 
-        $process = $this->runProcess(new Process(sprintf(
-            'git push %s %s:%s',
-            $config->fortrabbitRemoteName(),
-            $config->targetBranch(),
-            $config->remoteBranch()
-        )));
+        $process = $this->runProcess(
+            (new Process(sprintf(
+                'git push %s %s:%s',
+                $config->fortrabbitRemoteName(),
+                $config->targetBranch(),
+                $config->remoteBranch()
+            )))->setTimeout(60 * 15) // 15 mins
+        );
 
         return $this;
     }
@@ -266,12 +268,14 @@ class Git extends AbstractTask
     {
         $this->progress('Pushing to Fortrabbit');
 
-        $process = $this->runProcess(new Process(sprintf(
-            'git push -u %s %s:refs/heads/%s',
-            $config->fortrabbitRemoteName(),
-            $config->targetBranch(),
-            $config->remoteBranch()
-        )));
+        $process = $this->runProcess(
+            (new Process(sprintf(
+                'git push -u %s %s:refs/heads/%s',
+                $config->fortrabbitRemoteName(),
+                $config->targetBranch(),
+                $config->remoteBranch()
+            )))->setTimeout(60 * 15) // 15 mins
+        );
 
         return $this;
     }

@@ -2,6 +2,8 @@
 
 namespace Tlr\Frb\Commands;
 
+use Monolog\Handler\NullHandler;
+use Monolog\Logger;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -30,6 +32,22 @@ class InitCommand extends AbstractEnvironmentlessCommand
             ->addArgument('envs', InputArgument::IS_ARRAY, 'Environments to set up.')
         ;
     }
+
+    /**
+     * Build or retrieve from cache a logger
+     *
+     * @return Monolog\Logger
+     */
+    public function logger() : Logger
+    {
+        if (!static::$logger) {
+            static::$logger = new Logger('null');
+            static::$logger->pushHandler(new NullHandler);
+        }
+
+        return static::$logger;
+    }
+
 
     /**
      * Run the command

@@ -60,7 +60,7 @@ class Scp extends AbstractTask
             'scp -r %s "%s:%s"',
             $localDir,
             $config->sshUrl(),
-            $remoteDir
+            dirname($remoteDir)
         )));
 
         return $this;
