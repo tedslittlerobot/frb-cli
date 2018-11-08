@@ -28,6 +28,10 @@ class Config
         $this->environment = $environment;
 
         $this->raw = static::parseConfig(frbEnvPath(), $environment);
+
+        // check for valid structure (throws if invalid config)
+        $this->beforeCommands();
+        $this->afterCommands();
     }
 
     /**
@@ -188,6 +192,53 @@ class Config
                     'in' => null,
                 ];
             });
+    }
+
+    /**
+     * Get the before commands to run
+     *
+     * @return Illuminate\Support\Collection
+     */
+    public function beforeCommands() : Collection
+    {
+        return collect((array) $this->get('before', []))
+            ->map([$this, 'mapHooks']);
+    }
+
+    /**
+     * Get the after commands to run
+     *
+     * @return Illuminate\Support\Collection
+     */
+    public function afterCommands() : Collection
+    {
+        return collect((array) $this->get('after', []))
+            ->map([$this, 'mapHooks']);
+    }
+
+    /**
+     * Map the before / after hooks into [
+     *   'run' => 'ls',
+     *   'on'  => 'remote',
+     * ]
+     *
+     * @param  mixed $command
+     * @return array
+     */
+    public function mapHooks($command) {
+        if (!is_array($command)) {
+            $command = [
+                'run' => $command,
+            ];
+        }
+
+        $command['on'] = array_get($command, 'on', 'remote');
+
+        if (!in_array($command['on'], ['remote', 'local'])) {
+            throw new \Exception('before/after@on must be either remote or local');
+        }
+
+        return $command;
     }
 
     /**

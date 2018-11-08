@@ -29,7 +29,7 @@ class Assets extends AbstractTask
         $commands = $config->buildCommands();
 
         if ($commands->isEmpty()) {
-            return;
+            return $this;
         }
 
         $this->formatProgress('Running Build Commands [%s]', $commands->count());

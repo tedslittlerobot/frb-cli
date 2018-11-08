@@ -5,8 +5,18 @@ remote_branch      : master
 
 build_commands :
   - make
-  - run
+  - run: make build
+    in: assets/js
 
 build_output :
   - public/build
   - public/build.json
+
+before :
+  - php artisan down
+  - run : ls -al
+    on : local
+
+after :
+  - php artisan migrate
+  - php artisan up
