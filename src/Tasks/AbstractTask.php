@@ -8,6 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
+use Tlr\Frb\Config;
 
 class AbstractTask
 {
@@ -179,5 +180,21 @@ class AbstractTask
         // );
 
         return $this;
+    }
+
+    /**
+     * Generate a raw Process for the given command
+     *
+     * @param  Config $config
+     * @param  string $command
+     * @return Symfony\Component\Process\Process
+     */
+    protected function sshProcess(Config $config, string $command) : Process
+    {
+        return new Process(sprintf(
+            'ssh %s %s',
+            $config->sshUrl(),
+            $command
+        ));
     }
 }

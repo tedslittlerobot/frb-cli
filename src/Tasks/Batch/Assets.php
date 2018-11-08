@@ -7,6 +7,7 @@ use Tlr\Frb\Tasks\AbstractTask;
 use Tlr\Frb\Tasks\Build;
 use Tlr\Frb\Tasks\Rsync;
 use Tlr\Frb\Tasks\Scp;
+use Tlr\Frb\Tasks\Upload;
 
 class Assets extends AbstractTask
 {
@@ -53,7 +54,7 @@ class Assets extends AbstractTask
      */
     public function push(Config $config)
     {
-        $scp = $this->task(Rsync::class);
+        $uploader = $this->task(Upload::class);
 
         $outputs = $config->buildOutputs();
         if ($outputs->isNotEmpty()) {
@@ -63,8 +64,8 @@ class Assets extends AbstractTask
                 $this->formatProgress('Pushing Build Output', $outputs->count());
             }
 
-            $outputs->each(function($directory) use ($scp, $config) {
-                $scp->pushPath($config, $directory);
+            $outputs->each(function($directory) use ($uploader, $config) {
+                $uploader->push($config, $directory);
             });
         }
 

@@ -24,7 +24,10 @@
         "illuminate/support": "5.*",
         "symfony/finder": "^4.1",
         "monolog/monolog": "^1.23",
-        "albertofem/rsync-lib": "^1.0"
+        "albertofem/rsync-lib": "^1.0",
+        "league/flysystem": "^1.0",
+        "league/flysystem-sftp": "^1.0",
+        "league/flysystem-aws-s3-v3": "^1.0"
     },
     "bin": [
         "frb"

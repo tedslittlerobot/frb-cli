@@ -30,8 +30,8 @@ class DeployAssetsCommand extends AbstractEnvironmentCommand
             ->setName('deploy:assets')
             ->setDescription('Deploy only the assets of the application.')
             ->addOption(
-                'scp-only',
-                's',
+                'push-only',
+                'p',
                 InputOption::VALUE_NONE,
                 'Do not attempt to build any assets - only push what is currently there.'
             )
@@ -54,7 +54,7 @@ class DeployAssetsCommand extends AbstractEnvironmentCommand
      */
     protected function handle(Config $config, InputInterface $input, OutputInterface $output)
     {
-        $scpOnly = $input->getOption('scp-only');
+        $scpOnly = $input->getOption('push-only');
         $buildOnly = $input->getOption('build-only');
 
         if ($scpOnly && $buildOnly) {

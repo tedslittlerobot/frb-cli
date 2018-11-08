@@ -125,6 +125,42 @@ class Config
      */
 
     /**
+     * Get the project environment
+     *
+     * @return string
+     */
+    public function professional() : bool
+    {
+        $type = $this->get('app_type', 'universal');
+
+        if (!in_array($type, ['professional', 'universal'])) {
+            throw new \Exception('You can only have a professional or universal app_type');
+        }
+
+        return $type === 'professional';
+    }
+
+    /**
+     * Get the project environment
+     *
+     * @return string
+     */
+    public function assetRoot() : string
+    {
+        return $this->get('asset_root', '/');
+    }
+
+    /**
+     * Local Asset Root
+     *
+     * @return string
+     */
+    public function localAssetRoot() : string
+    {
+        return $this->get('local_asset_root');
+    }
+
+    /**
      * Get the project name in fortrabbit
      *
      * @return string

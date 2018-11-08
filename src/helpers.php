@@ -62,3 +62,13 @@ function rootPath(string $path = null)  : string
 
     throw new \Exception('Unable to find a root directory with a .deploy folder');
 }
+
+function path_fragments(...$fragments) : string
+{
+    return collect($fragments)
+        ->filter()
+        ->map(function($fragment) {
+            return trim($fragment, '/');
+        })
+        ->implode('/');
+}

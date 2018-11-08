@@ -19,21 +19,6 @@ class FrbRemote extends AbstractTask
     protected $section = 'Fortrabbit Remote';
 
     /**
-     * Generate a raw Process for the given command
-     *
-     * @param  Config $config
-     * @param  string $command
-     * @return Symfony\Component\Process\Process
-     */
-    protected function sshProcess(Config $config, string $command) : Process {
-        return new Process(sprintf(
-            'ssh %s %s',
-            $config->sshUrl(),
-            $command
-        ));
-    }
-
-    /**
      * Run a generic command against the server
      *
      * @param  Config $config
