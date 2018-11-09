@@ -59,6 +59,8 @@ Config files can be created when you first bootstrap your project - `frb init st
 
 Alternatively, you can use the `frb make:env` command to add a sample file to your config directory.
 
+**NB.** There are serveral more config options that are as yet undocumented - mainly to handle the differences between "pro" and "universal" apps.
+
 The sample config file looks like this:
 
 ```yaml
@@ -67,15 +69,25 @@ frb_zone           : deploy.eu2.frbit.com
 target_branch      : origin/master
 remote_branch      : master
 
+before :
+  - php artisan down
+  - run : ls -al
+    on : local
+
+after :
+  - php artisan migrate
+  - php artisan up
+
+
 build_commands :
   - make
-  - run
+  - run: make build
+    in: assets/js
 
-build_directories :
+build_output :
   - public/build
-
-build_files :
   - public/build.json
+
 ```
 
 #### name
