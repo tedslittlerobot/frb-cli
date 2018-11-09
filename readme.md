@@ -9,10 +9,29 @@ A CLI tool to automate git deployments and builds with fortrabbit. Built to work
 
 #### Installation
 
+Add the cli project somewhere on your system:
+
 ```bash
-# NB - do not use yet - not on packagist!
-composer global require tlr/frb-cli@1.*
+git clone git@github.com:tedslittlerobot/frb-cli.git
+cd frb-cli
+composer install
 ```
+
+Then add an alias to your rc file (`~/.zshrc`, `~/.bashrc`) - something like
+
+```bash
+alias frb='/{user-home}/projects/frb-cli/frb'
+```
+
+To update, simply cd into the directory, and run:
+
+```bash
+git fetch
+git pull
+composer update
+```
+
+**NB.** Ideally, this will be installable through composer, but I am coming up against some dependancy issues when installing alongside some other common global projects. (Dependancy issues are between illuminate's support and the open source version of illuminate's collections).
 
 #### Project Setup
 
@@ -148,7 +167,7 @@ Runs a reset command on the remote server. Warning - this is a destructive comma
 
 ## To Do
 
-- [ ] Add remote command hooks (maintanence mode during deploy?)
+- [x] Add remote command hooks (maintanence mode during deploy?)
 - [x] Detect remote server status and run :first if it needs it...!
 - [x] Detect (isFile()) the build-push targets and run the directory / file task for whichever type it is 
 - [ ] Add confirmation to the reset command
