@@ -11,7 +11,9 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Tlr\Frb\Config;
+use Tlr\Frb\Support\BatchFileToIndividualFileWrapper;
 use Tlr\Frb\Support\RsyncAdapter;
+use Tlr\Frb\Support\S3BatchFileAdapter;
 use Tlr\Frb\Tasks\AbstractTask;
 use Tlr\Frb\Tasks\FrbRemote;
 
@@ -68,7 +70,7 @@ class Upload extends AbstractTask
 
         $client = S3Client::factory($credentials);
 
-        return new AwsS3Adapter($client, $credentials['bucket'], $config->assetRoot());
+        return new S3BatchFileAdapter($client, $credentials['bucket'], $config->assetRoot());
     }
 
     /**
@@ -89,19 +91,7 @@ class Upload extends AbstractTask
             throw new \Exception(sprintf('Nothing exists at path [%s]', $path));
         }
 
-        if (!is_dir($absolutePath)) {
-            return $this->pushFile($config, '', $path);
-        }
-
-        $finder = new Finder;
-
-        $finder->files()->in($absolutePath);
-
-        foreach ($finder as $file) {
-            $this->pushFile($config, $file->getRelativePathname(), $path);
-        }
-
-        return $this;
+        return $this->pushFile($config, '', $path);
     }
 
     /**
@@ -122,13 +112,17 @@ class Upload extends AbstractTask
             $file
         );
 
-        $fileConfig = [];
+        $fileConfig = [
+            'path' => $path,
+            'local-path' => $localPath,
+            'remote-path' => $remotePath,
+        ];
 
-        if (ends_with($file, '.css')) {
-            $fileConfig['mimetype'] = 'text/css';
-        }
-
-        $this->disk($config)->put($remotePath, file_get_contents($localPath), $fileConfig);
+        $this->disk($config)->put(
+            $remotePath,
+            file_get_contents($localPath),
+            $fileConfig
+        );
 
         return $this;
     }
