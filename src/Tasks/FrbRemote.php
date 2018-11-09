@@ -2,12 +2,13 @@
 
 namespace Tlr\Frb\Tasks;
 
+use League\Flysystem\Adapter\CanOverwriteFiles;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Tlr\Frb\Config;
 use Tlr\Frb\Tasks\AbstractTask;
 
-class FrbRemote extends AbstractTask
+class FrbRemote extends AbstractTask implements CanOverwriteFiles
 {
     /**
      * The "section" name for the task.

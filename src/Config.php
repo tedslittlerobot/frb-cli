@@ -155,7 +155,7 @@ class Config
      *
      * @return string
      */
-    public function localAssetRoot() : string
+    public function localAssetRoot() : ?string
     {
         return $this->get('local_asset_root');
     }

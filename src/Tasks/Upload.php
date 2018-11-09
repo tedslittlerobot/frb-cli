@@ -11,6 +11,7 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Tlr\Frb\Config;
+use Tlr\Frb\Support\RsyncAdapter;
 use Tlr\Frb\Tasks\AbstractTask;
 use Tlr\Frb\Tasks\FrbRemote;
 
@@ -45,11 +46,7 @@ class Upload extends AbstractTask
 
     public function sftpAdapter(Config $config)
     {
-        return new SftpAdapter([
-            'host' => $config->fortrabbitServer()(),
-            'port' => 443,
-            'username' => $config->projectName(),
-        ]);
+        return new RsyncAdapter($config);
     }
 
     public function s3Adapter(Config $config)
@@ -118,11 +115,20 @@ class Upload extends AbstractTask
     {
         $localPath = rootPath(path_fragments($path, $file));
         $remotePath = path_fragments(
-            str_replace($config->localAssetRoot(), '', $path),
+            $config->localAssetRoot() ?
+                str_replace($config->localAssetRoot(), '', $path) :
+                $path
+            ,
             $file
         );
 
-        $this->disk($config)->put($remotePath, file_get_contents($localPath));
+        $fileConfig = [];
+
+        if (ends_with($file, '.css')) {
+            $fileConfig['mimetype'] = 'text/css';
+        }
+
+        $this->disk($config)->put($remotePath, file_get_contents($localPath), $fileConfig);
 
         return $this;
     }
