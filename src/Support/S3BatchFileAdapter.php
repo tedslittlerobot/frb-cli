@@ -35,8 +35,8 @@ class S3BatchFileAdapter extends AwsS3Adapter
             }
 
             $output[] = parent::write(
-                $path,
-                file_get_contents($config->get('local-path')),
+                $to,
+                file_get_contents($from),
                 $fileConfig
             );
         }
