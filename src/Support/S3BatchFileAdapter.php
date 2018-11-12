@@ -34,6 +34,10 @@ class S3BatchFileAdapter extends AwsS3Adapter
                 $fileConfig->set('mimetype', 'text/css');
             }
 
+            if (ends_with($to, '.svg')) {
+                $fileConfig->set('mimetype', 'image/svg+xml');
+            }
+
             $output[] = parent::write(
                 $to,
                 file_get_contents($from),
